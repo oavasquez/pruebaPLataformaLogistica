@@ -16,6 +16,8 @@ function Icons(props) {
   const { classes } = props;
   return (
     <GridContainer>
+
+      {/*
       <GridItem xs={12} sm={12} md={12}>
         <Card plain>
           <CardHeader plain color="primary">
@@ -59,7 +61,7 @@ function Icons(props) {
             </Hidden>
           </CardBody>
         </Card>
-      </GridItem>
+      </GridItem>*/}
     </GridContainer>
   );
 }

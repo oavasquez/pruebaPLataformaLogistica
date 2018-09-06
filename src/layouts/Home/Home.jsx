@@ -18,6 +18,7 @@ import UserProfile from "../../views/UserProfile/UserProfile.jsx";
 import TableList from "../../views/TableList/TableList.jsx";
 import Icons from "../../views/Icons/Icons.jsx";
 import Maps from "../../views/Maps/Maps.jsx";
+import ShowUsers from "../../views/ShowUsers/ShowUsers.jsx";
 import NotificationsPage from "../../views/Notifications/Notifications.jsx";
 import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -315,7 +316,7 @@ class App extends Component {
                   />
                   <PrivateRoute
                     authed={this.state.authed}
-                    path="/user"
+                    path="/userProfile"
                     component={UserProfile}
                   />
                   <PrivateRoute
@@ -327,6 +328,11 @@ class App extends Component {
                     authed={this.state.authed}
                     path="/rastreo"
                     component={Icons}
+                  />
+                  <PrivateRoute
+                    authed={this.state.authed}
+                    path="/user"
+                    component={ShowUsers}
                   />
                   <PrivateRoute
                     authed={this.state.authed}
