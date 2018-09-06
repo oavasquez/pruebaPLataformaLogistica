@@ -29,7 +29,7 @@ import CardBody from "../Card/CardBody.jsx";
 let counter = 0;
 function createData(nombreUsuario, nombre, tipoUsuario, fechaCreacion) {
     counter += 1;
-    return { id: counter, nombreUsuario, nombre, tipoUsuario, fechaCreacion};
+    return { id: counter, nombreUsuario, nombre, tipoUsuario, fechaCreacion };
 }
 
 function desc(a, b, orderBy) {
@@ -58,6 +58,13 @@ class EnhancedTableHead extends React.Component {
     createSortHandler = property => event => {
         this.props.onRequestSort(event, property);
     };
+
+    eliminarRegistro = () => {
+        console.log("Eliminar");
+    };
+    
+
+    
 
     render() {
         const { onSelectAllClick, order, orderBy, numSelected, rowCount } = this.props;
@@ -136,8 +143,13 @@ const toolbarStyles = theme => ({
     },
 });
 
+
+
+
 let EnhancedTableToolbar = props => {
     const { numSelected, classes } = props;
+
+   
 
     return (
         <Toolbar
@@ -152,15 +164,16 @@ let EnhancedTableToolbar = props => {
           </Typography>
                 ) : (
                         <Typography variant="title" id="tableTitle">
-                            
-          </Typography>
+
+                        </Typography>
                     )}
             </div>
             <div className={classes.spacer} />
             <div className={classes.actions}>
+            {this.eliminarRegistro}
                 {numSelected > 0 ? (
                     <Tooltip title="Delete">
-                        <IconButton aria-label="Delete">
+                        <IconButton aria-label="Delete" onClick={this.eliminarRegistro} >
                             <DeleteIcon />
                         </IconButton>
                     </Tooltip>
@@ -202,43 +215,43 @@ class TableUser extends React.Component {
         orderBy: 'id',
         selected: [],
         data: [
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            createData('vasquezo','Oscar Andres Vasquez','Cliente', Date('2017-04-03')),
-            
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+
         ],
         page: 0,
         rowsPerPage: 10,
@@ -291,6 +304,9 @@ class TableUser extends React.Component {
     handleChangeRowsPerPage = event => {
         this.setState({ rowsPerPage: event.target.value });
     };
+
+
+
 
     isSelected = id => this.state.selected.indexOf(id) !== -1;
 
