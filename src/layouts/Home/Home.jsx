@@ -39,8 +39,8 @@ const styles = theme => ({
   },
   flex: {
     flex: 1,
-  },  
-  container :{
+  },
+  container: {
     textAlign: 'center',
     Paddingbottom: "0",
   },
@@ -91,12 +91,12 @@ function PrivateRoute({ component: Component, authed, ...rest }) {
   );
 }
 
-function PublicRoute({ component: Component, loanding ,authed, ...rest }) {
+function PublicRoute({ component: Component, loanding, authed, ...rest }) {
   return (
     <Route
       {...rest}
       render={props =>
-        authed === false? (
+        authed === false ? (
           <Component {...props} />
         ) : (
             <Redirect to="/dashboard" />
@@ -107,26 +107,26 @@ function PublicRoute({ component: Component, loanding ,authed, ...rest }) {
 
 class App extends Component {
   classes = {}
-  constructor(props){
+  constructor(props) {
     super(props);
     //const { classes } = this.props;
     this.classes = this.props.classes;
   }
 
 
-  
-  theme={
-    direction:"rtl"
+
+  theme = {
+    direction: "rtl"
   }
   state = {
     authed: false,
     loading: true,
     open: false,
-    usuario:{},
+    usuario: {},
     anchorEl: null,
   };
 
-  usuario={}
+  usuario = {}
 
   handleDrawerOpen = () => {
     this.setState({ open: true });
@@ -146,9 +146,9 @@ class App extends Component {
   componentDidMount() {
     this.removeListener = firebaseAuth().onAuthStateChanged(user => {
       if (user) {
-        
+
         this.setState({
-          usuario:user,
+          usuario: user,
           authed: true,
           loading: false
         });
@@ -173,13 +173,13 @@ class App extends Component {
     this.setState(state => ({
       open: !state.open
     }));
-    this.theme.direction="ltl"  
+    this.theme.direction = "ltl"
   }
 
   componentWillUnmount() {
     this.removeListener();
   }
-    
+
   render() {
     const { anchorEl } = this.state;
     const openUsuarioMenu = Boolean(anchorEl);
@@ -208,100 +208,106 @@ class App extends Component {
     return this.state.loading === true ? (
 
 
-     
+
       <div className={classes.container}>
-      <Typography variant="display3" gutterBottom>
-        Estamos cargando lo necesario
+        <Typography variant="display3" gutterBottom>
+          Estamos cargando lo necesario
       </Typography>
-  <br></br>
-  <br></br>
-  <br></br>
-  <CircularProgress className={classes.progress} size={200} style={{ color: purple[40] }} thickness={15} />
+        <br></br>
+        <br></br>
+        <br></br>
+        <CircularProgress className={classes.progress} size={200} style={{ color: purple[40] }} thickness={15} />
       </div>
     ) : (
-          <div className={this.classes.root} >
+        <div className={this.classes.root} >
 
 
-            <Grid container spacing={24}>
-              <Grid item md={12}>
-                <AppBar
-                    position="sticky"
-                    className={classNames(classes.appBar, this.state.open && classes.appBarShift)}
-                  >
-                    <Toolbar disableGutters={!this.state.open}>
-                    <div className={classNames(classes.menuButton, !this.state.authed && classes.hide)}>
-                      <IconButton
-                        color="inherit"
-                        aria-label="Open drawer"
-                        onClick={this.handleDrawerOpen}
-                        className={classNames(classes.menuButton,  this.state.open && classes.hide)}
-                      >
-                        <MenuIcon />
-                      </IconButton>
-                      </div>
-                      <Typography variant="title" color="inherit" className={this.classes.flex}>
-                      Plataforma Logistica
+          <Grid container spacing={24}>
+            <Grid item md={12}>
+              <AppBar
+                position="sticky"
+                className={classNames(classes.appBar, this.state.open && classes.appBarShift)}
+              >
+                <Toolbar disableGutters={!this.state.open}>
+                  <div className={classNames(classes.menuButton, !this.state.authed && classes.hide)}>
+                    <IconButton
+                      color="inherit"
+                      aria-label="Open drawer"
+                      onClick={this.handleDrawerOpen}
+                      className={classNames(classes.menuButton, this.state.open && classes.hide)}
+                    >
+                      <MenuIcon />
+                    </IconButton>
+                  </div>
+                  <Typography variant="title" color="inherit" className={this.classes.flex}>
+                    Plataforma Logistica
                       </Typography>
-                      {authButtons}
-                     
-                        
-                      <Typography variant="subheading"  color="inherit"  align="right">
-                      Bienvenido:{this.state.usuario.displayName}
-                      </Typography>
+                  {authButtons}
+
+                  <div className={classNames(!this.state.authed && classes.hide)}>
                    
-                      
-                       <IconButton
-                        aria-owns={openUsuarioMenu ? 'menu-appbar' : null}
-                        aria-haspopup="true"
-                        onClick={this.handleMenu}
-                        color="inherit"
-                       >
-                        <AccountCircle />
-                      </IconButton>
-                          <Menu
-                            id="menu-appbar"
-                            anchorEl={anchorEl}
-                            anchorOrigin={{
-                              vertical: 'top',
-                              horizontal: 'right',
-                            }}
-                            transformOrigin={{
-                              vertical: 'top',
-                              horizontal: 'right',
-                            }}
-                            open={openUsuarioMenu}
-                            onClose={this.handleClose}
-                          >
-                            <Link to="/" color="inherit"> 
-                                <MenuItem onClick={this.handleClose}> 
-                                  Home
-                                </MenuItem>
-                            </Link>
-                            <MenuItem  onClick={() => {logout()}}>Salir</MenuItem>
-                          </Menu>
-                         
-                  </Toolbar>
-                  </AppBar>
-              </Grid>
+                      <Typography variant="subheading" color="inherit" align="right">
+                        {this.state.usuario.displayName}
+                      </Typography>
+                    </div>
 
-              
-            <Grid item md={this.state.open ? 2: 1}>
-            <div className={classNames(classes.menuButton, !this.state.authed && classes.hide)}>
-            <Minidrawer 
-                      onSelectLanguage={this.cambioEstadoBar.bind(this)}  
-                      open={this.state.open}
-                      routes={dashboardRoutes}
-                      theme={this.theme}
-                      
-                      > 
-            </Minidrawer>
-            </div>
+
+                    <div className={classNames(!this.state.authed && classes.hide)}>
+
+                    <IconButton
+                      aria-owns={openUsuarioMenu ? 'menu-appbar' : null}
+                      aria-haspopup="true"
+                      onClick={this.handleMenu}
+                      color="inherit"
+                      >
+                      <AccountCircle />
+                    </IconButton>
+                    <Menu
+                      id="menu-appbar"
+                      anchorEl={anchorEl}
+                      anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                      }}
+                      transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                      }}
+                      open={openUsuarioMenu}
+                      onClose={this.handleClose}
+                      >
+                      <Link to="/" color="inherit">
+                        <MenuItem onClick={this.handleClose}>
+                          Home
+                                </MenuItem>
+                      </Link>
+                      <MenuItem onClick={() => { logout() }}>Salir</MenuItem>
+                    </Menu>
+                      </div>
+       
+
+                </Toolbar>
+              </AppBar>
             </Grid>
-            <Grid item md={this.state.open ? 10: 11 } > 
-          
+
+
+            <Grid item md={this.state.open ? 2 : 1}>
+              <div className={classNames(classes.menuButton, !this.state.authed && classes.hide)}>
+                <Minidrawer
+                  onSelectLanguage={this.cambioEstadoBar.bind(this)}
+                  open={this.state.open}
+                  routes={dashboardRoutes}
+                  theme={this.theme}
+
+                >
+                </Minidrawer>
+              </div>
+            </Grid>
+            <Grid item md={this.state.open ? 10 : 11} >
+
               <div >
                 <Switch>
-                  <Route path="/" exact component={Dashboard} />
+                  <Route path="/" exact component={Home} />
                   <PublicRoute
                     authed={this.state.authed}
                     path="/login"
@@ -317,17 +323,17 @@ class App extends Component {
                     path="/entregas"
                     component={TableList}
                   />
-                   <PrivateRoute
+                  <PrivateRoute
                     authed={this.state.authed}
                     path="/rastreo"
                     component={Icons}
                   />
-                   <PrivateRoute
+                  <PrivateRoute
                     authed={this.state.authed}
                     path="/maps"
                     component={Maps}
                   />
-                   <PrivateRoute
+                  <PrivateRoute
                     authed={this.state.authed}
                     path="/notifications"
                     component={NotificationsPage}
@@ -345,13 +351,13 @@ class App extends Component {
                   />
                   <Route render={() => <h3>No Se encuentra la pagina</h3>} />
                 </Switch>
-             
-            </div>
-            </Grid>
-            </Grid>
-          </div>
 
-        
+              </div>
+            </Grid>
+          </Grid>
+        </div>
+
+
       );
   }
 }
