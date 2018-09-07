@@ -20,6 +20,7 @@ function TableList(props) {
       <GridItem xs={12} sm={12} md={12}>
         <TableUser
         title={"Lista de Entregas"}
+        colortable={"warning"}
         />
       </GridItem>
     </GridContainer>

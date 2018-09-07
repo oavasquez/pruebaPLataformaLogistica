@@ -24,11 +24,7 @@ import { Link } from "react-router-dom";
 
 
 
-let counter = 0;
-function createData(nombreUsuario, nombre, tipoUsuario, correo, telefono,pais,ciudad, fechaCreacion) {
-    counter += 1;
-    return { id: counter, nombreUsuario, nombre, tipoUsuario, correo, telefono,pais, ciudad, fechaCreacion };
-}
+
 
 function desc(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -64,7 +60,11 @@ const styles = theme => ({
 
 class TableUser extends React.Component {
 
-
+    counter = 0;
+    createData=(nombreUsuario, nombre, tipoUsuario, correo, telefono,pais,ciudad, fechaCreacion)=>{
+        this.counter += 1;
+        return { id: this.counter, nombreUsuario, nombre, tipoUsuario, correo, telefono,pais, ciudad, fechaCreacion };
+    }
 
     state = {
         open: false,
@@ -75,12 +75,12 @@ class TableUser extends React.Component {
         valorBuscar: 0,
         filtrar: false,
         data: [
-            createData('ramires123', 'jimenez ramirez', 'Cliente','asd@asd.com','123456789','Honduras','Tegucigalpa', '2017-04-03'),
-            createData('2vasquezo', 'aOscar Andres Vasquez', 'Cliente','asd@asd.com','123456789','Honduras','Tegucigalpa', '2017-05-03'),
-            createData('2vasquezo', 'aOscar Andres Vasquez', 'Cliente','asd@asd.com','123456789','Honduras','Tegucigalpa', '2017-06-03'),
-            createData('2vasquezo', 'aOscar Andres Vasquez', 'Cliente','asd@asd.com','123456789','Honduras','Tegucigalpa', '2017-07-03'),
-            createData('2vasquezo', 'aOscar Andres Vasquez', 'Cliente','asd@asd.com','123456789','Honduras','Tegucigalpa', '2017-08-03'),
-            createData('2vasquezo', 'aOscar Andres Vasquez', 'Cliente','asd@asd.com','123456789','Honduras','Tegucigalpa', '2017-09-03'),
+            this.createData('ramires123', 'jimenez ramirez', 'Cliente','asd@asd.com','123456789','Honduras','Tegucigalpa', '2017-04-03'),
+            this.createData('2vasquezo', 'aOscar Andres Vasquez', 'Cliente','asd@asd.com','123456789','Honduras','Tegucigalpa', '2017-05-03'),
+            this.createData('2vasquezo', 'aOscar Andres Vasquez', 'Cliente','asd@asd.com','123456789','Honduras','Tegucigalpa', '2017-06-03'),
+            this.createData('2vasquezo', 'aOscar Andres Vasquez', 'Cliente','asd@asd.com','123456789','Honduras','Tegucigalpa', '2017-07-03'),
+            this.createData('2vasquezo', 'aOscar Andres Vasquez', 'Cliente','asd@asd.com','123456789','Honduras','Tegucigalpa', '2017-08-03'),
+            this.createData('2vasquezo', 'aOscar Andres Vasquez', 'Cliente','asd@asd.com','123456789','Honduras','Tegucigalpa', '2017-09-03'),
             
         ],
         page: 0,
@@ -159,7 +159,7 @@ class TableUser extends React.Component {
     isSelected = id => this.state.selected.indexOf(id) !== -1;
 
     render() {
-        const { classes, title} = this.props;
+        const { classes, title, colortable} = this.props;
         const { data, order, orderBy, selected, rowsPerPage, page, open, } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
@@ -174,7 +174,7 @@ class TableUser extends React.Component {
                 />
                 <GridItem xs={12} sm={12} md={12}>
                     <Card>
-                        <CardHeader color="success">
+                        <CardHeader color={colortable}>
                             <h3 className={styles.cardTitleWhite}>{title}</h3>
                         </CardHeader>
                         <CardBody>
