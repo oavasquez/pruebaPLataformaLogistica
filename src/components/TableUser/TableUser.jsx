@@ -159,8 +159,8 @@ class TableUser extends React.Component {
     isSelected = id => this.state.selected.indexOf(id) !== -1;
 
     render() {
-        const { classes } = this.props;
-        const { data, order, orderBy, selected, rowsPerPage, page, open } = this.state;
+        const { classes, title} = this.props;
+        const { data, order, orderBy, selected, rowsPerPage, page, open, } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
         return (
@@ -175,7 +175,7 @@ class TableUser extends React.Component {
                 <GridItem xs={12} sm={12} md={12}>
                     <Card>
                         <CardHeader color="success">
-                            <h3 className={styles.cardTitleWhite}>Lista de Usuarios</h3>
+                            <h3 className={styles.cardTitleWhite}>{title}</h3>
                         </CardHeader>
                         <CardBody>
                             <Paper className={classes.root}>

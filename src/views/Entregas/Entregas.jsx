@@ -19,7 +19,7 @@ function TableList(props) {
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
         <TableUser
-         title={"Lista de Usuarios"}
+        title={"Lista de Entregas"}
         />
       </GridItem>
     </GridContainer>
