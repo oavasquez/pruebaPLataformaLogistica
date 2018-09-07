@@ -24,7 +24,8 @@ import GridContainer from "../Grid/GridContainer.jsx";
 import Card from "../Card/Card.jsx";
 import CardHeader from "../Card/CardHeader.jsx";
 import CardBody from "../Card/CardBody.jsx";
-
+import AlertDialog from '../Alert/Alert';
+import EnhancedTableToolbar from '../TableToolbar/EnhancedTableToolbar';
 
 let counter = 0;
 function createData(nombreUsuario, nombre, tipoUsuario, fechaCreacion) {
@@ -55,19 +56,26 @@ const rows = [
 ];
 
 class EnhancedTableHead extends React.Component {
+
+    
+        state = {
+           open : false
+        };
+
+
     createSortHandler = property => event => {
         this.props.onRequestSort(event, property);
     };
 
-    eliminarRegistro = () => {
+    handleDelete = () => {
         console.log("Eliminar");
+        this.setState({ open: true });
     };
-    
 
-    
+       
 
     render() {
-        const { onSelectAllClick, order, orderBy, numSelected, rowCount } = this.props;
+        const { onSelectAllClick, order, orderBy, numSelected, rowCount, selected} = this.props;
 
         return (
             <TableHead>
@@ -118,83 +126,7 @@ EnhancedTableHead.propTypes = {
     rowCount: PropTypes.number.isRequired,
 };
 
-const toolbarStyles = theme => ({
-    root: {
-        paddingRight: theme.spacing.unit,
-    },
-    highlight:
-        theme.palette.type === 'light'
-            ? {
-                color: theme.palette.secondary.main,
-                backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-            }
-            : {
-                color: theme.palette.text.primary,
-                backgroundColor: theme.palette.secondary.dark,
-            },
-    spacer: {
-        flex: '1 1 100%',
-    },
-    actions: {
-        color: theme.palette.text.secondary,
-    },
-    title: {
-        flex: '0 0 auto',
-    },
-});
 
-
-
-
-let EnhancedTableToolbar = props => {
-    const { numSelected, classes } = props;
-
-   
-
-    return (
-        <Toolbar
-            className={classNames(classes.root, {
-                [classes.highlight]: numSelected > 0,
-            })}
-        >
-            <div className={classes.title}>
-                {numSelected > 0 ? (
-                    <Typography color="inherit" variant="subheading">
-                        {numSelected} Seleccionados
-          </Typography>
-                ) : (
-                        <Typography variant="title" id="tableTitle">
-
-                        </Typography>
-                    )}
-            </div>
-            <div className={classes.spacer} />
-            <div className={classes.actions}>
-            {this.eliminarRegistro}
-                {numSelected > 0 ? (
-                    <Tooltip title="Delete">
-                        <IconButton aria-label="Delete" onClick={this.eliminarRegistro} >
-                            <DeleteIcon />
-                        </IconButton>
-                    </Tooltip>
-                ) : (
-                        <Tooltip title="Filtrar lista">
-                            <IconButton aria-label="Filter list">
-                                <FilterListIcon />
-                            </IconButton>
-                        </Tooltip>
-                    )}
-            </div>
-        </Toolbar>
-    );
-};
-
-EnhancedTableToolbar.propTypes = {
-    classes: PropTypes.object.isRequired,
-    numSelected: PropTypes.number.isRequired,
-};
-
-EnhancedTableToolbar = withStyles(toolbarStyles)(EnhancedTableToolbar);
 
 const styles = theme => ({
     root: {
@@ -210,52 +142,59 @@ const styles = theme => ({
 });
 
 class TableUser extends React.Component {
-    state = {
-        order: 'asc',
-        orderBy: 'id',
-        selected: [],
-        data: [
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
-            createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
 
-        ],
-        page: 0,
-        rowsPerPage: 10,
-    };
+   
+
+    state = {
+            open:false,
+            order: 'asc',
+            orderBy: 'id',
+            selected: [],
+            data: [
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+                createData('vasquezo', 'Oscar Andres Vasquez', 'Cliente', Date('2017-04-03')),
+    
+            ],
+            page: 0,
+            rowsPerPage: 10,
+        };
+    
+      
+    
 
     handleRequestSort = (event, property) => {
         const orderBy = property;
@@ -305,6 +244,12 @@ class TableUser extends React.Component {
         this.setState({ rowsPerPage: event.target.value });
     };
 
+    cambioEstadoModal(values) {
+        this.setState({
+          open: values
+        });
+    }
+
 
 
 
@@ -312,13 +257,18 @@ class TableUser extends React.Component {
 
     render() {
         const { classes } = this.props;
-        const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
+        const { data, order, orderBy, selected, rowsPerPage, page, open } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
         return (
 
 
             <GridContainer>
+                <AlertDialog
+                open={open}
+                cantidad={selected.length}
+                cerrarModal={this.cambioEstadoModal.bind(this)}
+                />
                 <GridItem xs={12} sm={12} md={12}>
                     <Card>
                         <CardHeader color="warning">
@@ -326,11 +276,16 @@ class TableUser extends React.Component {
                         </CardHeader>
                         <CardBody>
                             <Paper className={classes.root}>
-                                <EnhancedTableToolbar numSelected={selected.length} />
+                                <EnhancedTableToolbar 
+                                        numSelected={selected.length}  
+                                        selected={selected} 
+                                        handleOpenModal={this.cambioEstadoModal.bind(this)}
+                                        />
                                 <div className={classes.tableWrapper}>
                                     <Table className={classes.table} aria-labelledby="tableTitle">
                                         <EnhancedTableHead
                                             numSelected={selected.length}
+                                            selected={selected}
                                             order={order}
                                             orderBy={orderBy}
                                             onSelectAllClick={this.handleSelectAllClick}

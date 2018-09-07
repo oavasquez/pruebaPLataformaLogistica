@@ -102,9 +102,7 @@ class MiniDrawer extends React.Component {
   handleDrawerClose = () => {
     var lang = false
     this.props.onSelectLanguage(lang);  
-    this.theme.direction="ltl"      
-    console.log(this.theme.direction)    
-   
+    this.theme.direction="ltl"         
 
   };
 
@@ -116,8 +114,7 @@ class MiniDrawer extends React.Component {
   render() {
     const { classes, theme , open} = this.props;
 
-    console.log(this.props.open)
-
+   
 
     return (
       <div className={classes.root}>
