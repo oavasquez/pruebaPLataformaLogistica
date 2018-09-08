@@ -18,6 +18,7 @@ import UserProfile from "../../views/UserProfile/UserProfile.jsx";
 import TableList from "../../views/TableList/TableList.jsx";
 import Entregas from "../../views/Entregas/Entregas";
 import Icons from "../../views/Icons/Icons.jsx";
+import Paquete from "../../views/Paquete/Paquete";
 import Maps from "../../views/Maps/Maps.jsx";
 import ShowUsers from "../../views/ShowUsers/ShowUsers.jsx";
 import NotificationsPage from "../../views/Notifications/Notifications.jsx";
@@ -247,21 +248,21 @@ class App extends Component {
                   {authButtons}
 
                   <div className={classNames(!this.state.authed && classes.hide)}>
-                   
-                      <Typography variant="subheading" color="inherit" align="right">
-                        {this.state.usuario.displayName}
-                      </Typography>
-                    </div>
+
+                    <Typography variant="subheading" color="inherit" align="right">
+                      {this.state.usuario.displayName}
+                    </Typography>
+                  </div>
 
 
-                    <div className={classNames(!this.state.authed && classes.hide)}>
+                  <div className={classNames(!this.state.authed && classes.hide)}>
 
                     <IconButton
                       aria-owns={openUsuarioMenu ? 'menu-appbar' : null}
                       aria-haspopup="true"
                       onClick={this.handleMenu}
                       color="inherit"
-                      >
+                    >
                       <AccountCircle />
                     </IconButton>
                     <Menu
@@ -277,16 +278,16 @@ class App extends Component {
                       }}
                       open={openUsuarioMenu}
                       onClose={this.handleClose}
-                      >
+                    >
                       <Link to="/" color="inherit">
                         <MenuItem onClick={this.handleClose}>
                           Home
                                 </MenuItem>
                       </Link>
-                      <MenuItem onClick={() => { logout() }}>Salir</MenuItem>
+                      <MenuItem onClick={() => { logout(), this.setState({ anchorEl: null }) }}>Salir</MenuItem>
                     </Menu>
-                      </div>
-       
+                  </div>
+
 
                 </Toolbar>
               </AppBar>
@@ -345,16 +346,21 @@ class App extends Component {
                     path="/notifications"
                     component={NotificationsPage}
                   />
-                  <PublicRoute
-                    authed={this.state.authed}
-                    path="/register"
-                    component={Register}
-                  />
+                    <PrivateRoute
+                     authed={this.state.authed}
+                     path="/paquete"
+                     component={Paquete}
+                   />
                   <PrivateRoute
                     authed={this.state.authed}
                     loanding={this.state.loading}
                     path="/dashboard"
                     component={Dashboard}
+                  />
+                  <PublicRoute
+                    authed={this.state.authed}
+                    path="/register"
+                    component={Register}
                   />
                   <Route render={() => <h3>No Se encuentra la pagina</h3>} />
                 </Switch>

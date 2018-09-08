@@ -99,7 +99,7 @@ class EnhancedTableToolbar extends React.Component {
 
     render() {
 
-        const { numSelected, classes, selected } = this.props;
+        const { numSelected, classes, selected, rows } = this.props;
 
 
         return (
@@ -139,10 +139,12 @@ class EnhancedTableToolbar extends React.Component {
                                         onChange={this.handleChange}
                                     >
                                         <MenuItem value="" disabled>Selecciona una columna</MenuItem>
-                                        <MenuItem value={"id"}>Id</MenuItem>
-                                        <MenuItem value={"nombre"}>Nombre</MenuItem>
-                                        <MenuItem value={"tipoUsuario"}>Tipo de usuario</MenuItem>
-                                        <MenuItem value={"fechaCreacion"}>Fecha de creacion</MenuItem>
+                                        {rows.map(n=>{
+                                            console.log(n.id)
+                                            return(
+                                            <MenuItem value={n.id}>{n.label}</MenuItem>
+                                            )
+                                        })}
                                     </Select>
                                 </FormControl>
                             </div>

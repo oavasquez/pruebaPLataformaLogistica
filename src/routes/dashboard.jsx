@@ -14,6 +14,7 @@ import UserProfile from "../views/UserProfile/UserProfile.jsx";
 import ShowUser from "../views/ShowUsers/ShowUsers.jsx";
 import TableList from "../views/TableList/TableList.jsx";
 import Entrega from "../views/Entregas/Entregas";
+import Paquete from "../views/Paquete/Paquete";
 import Typography from "../views/Typography/Typography.jsx";
 import Icons from "../views/Icons/Icons.jsx";
 import Maps from "../views/Maps/Maps.jsx";
@@ -69,6 +70,13 @@ const dashboardRoutes = [
     navbarName: "Map",
     icon: LocationOn,
     component: Maps
+  },
+  {
+    path: "/paquete",
+    sidebarName: "Paquete",
+    navbarName: "Paquetes",
+    icon: LocationOn,
+    component: Paquete
   },
   {
     path: "/notifications",
