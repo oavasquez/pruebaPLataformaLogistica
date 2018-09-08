@@ -12,11 +12,21 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 
+import TextField from '@material-ui/core/TextField';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+
 
 
 const toolbarStyles = theme => ({
     root: {
         paddingRight: theme.spacing.unit,
+    },
+    formControl: {
+        margin: theme.spacing.unit,
+        minWidth: 220,
     },
     highlight:
         theme.palette.type === 'light'
@@ -37,61 +47,127 @@ const toolbarStyles = theme => ({
     title: {
         flex: '0 0 auto',
     },
+    textField: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        width: 200,
+      },    
 });
 
 class EnhancedTableToolbar extends React.Component {
 
-    state={
-        open:true
+    state = {
+        open: true,
+        nombreColumna: 'id',
+        valorBuscar:  0,
+        filtrar:false
     }
 
-    handleDelete=()=>{
-        this.setState({open:false})
+    handleDelete = () => {
+        this.setState({ open: false })
         this.props.handleOpenModal(true)
-        
+
     }
-   
+
+    handleChange = event => {
+        this.setState({ [event.target.name]: event.target.value });
+        const values={}
+        console.log (event.target.name)
+    };
+
+    handleChangeTextField = event => {
+        this.setState({ [event.target.name]: event.target.value });
+        let values={}
+        if(event.target.value!=""){
+            this.setState({ filtrar: true });
+            values={
+                columnaNombre:this.state.nombreColumna,
+                valorBuscar:event.target.value,
+                filtrar:true
+            }
+        }else{
+            this.setState({ filtrar: false });
+            values={
+                columnaNombre:this.state.nombreColumna,
+                valorBuscar:event.target.value,
+                filtrar:false
+            }
+        }
+        this.props.searchValues(values)
+      
+    };
+
     render() {
 
-    const { numSelected, classes, selected} = this.props;
+        const { numSelected, classes, selected } = this.props;
 
 
-    return (
-        <Toolbar
-            className={classNames(classes.root, {
-                [classes.highlight]: numSelected > 0,
-            })}
-        >
-            <div className={classes.title}>
-                {numSelected > 0 ? (
-                    <Typography color="inherit" variant="subheading">
-                        {numSelected} Elementos selecionados
+        return (
+            <Toolbar
+                className={classNames(classes.root, {
+                    [classes.highlight]: numSelected > 0,
+                })}
+            >
+                <div className={classes.title}>
+                    {numSelected > 0 ? (
+                        <Typography color="inherit" variant="subheading">
+                            {numSelected} Elementos selecionados
           </Typography>
-                ) : (
-                        <Typography variant="title" id="tableTitle">
+                    ) : (
+                            <div>
+                                 <FormControl className={classes.formControl}>
+                                <TextField
+                                    name="valorBuscar"
+                                    id="buscar"
+                                    label="Buscar"
+                                    defaultValue=""
+                                    className={classes.textField}
+                                    margin="normal"
+                                    onChange={this.handleChangeTextField }
+                                />
+                                 </FormControl>
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel htmlFor="columna">Nombre de columna</InputLabel>
+                                    <Select
+                                       
+                                        name="nombreColumna"
+                                        inputProps={{
+                                            name: 'nombreColumna',
+                                            id: 'columna',
+                                        }}
+                                        value={this.state.nombreColumna}
+                                        onChange={this.handleChange}
+                                    >
+                                        <MenuItem value="" disabled>Selecciona una columna</MenuItem>
+                                        <MenuItem value={"id"}>Id</MenuItem>
+                                        <MenuItem value={"nombre"}>Nombre</MenuItem>
+                                        <MenuItem value={"tipoUsuario"}>Tipo de usuario</MenuItem>
+                                        <MenuItem value={"fechaCreacion"}>Fecha de creacion</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </div>
+                        )}
+                </div>
+                <div className={classes.spacer} />
+                <div className={classes.actions}>
 
-                        </Typography>
-                    )}
-            </div>
-            <div className={classes.spacer} />
-            <div className={classes.actions}>
-          
-                {numSelected > 0 ? (
-                    <Tooltip title="Delete" >
-                        <IconButton aria-label="Delete"  >
-                            <DeleteIcon onClick={this.handleDelete}/>
-                        </IconButton>
-                    </Tooltip>
-                ) : (
-                        <Tooltip title="Filtrar lista">
-                            <IconButton aria-label="Filter list">
-                                <FilterListIcon />
+                    {numSelected > 0 ? (
+                        <Tooltip title="Delete" >
+                            <IconButton aria-label="Delete" onClick={this.handleDelete} >
+                                <DeleteIcon />
                             </IconButton>
                         </Tooltip>
-                    )}
-            </div>
-        </Toolbar>
-    );
+                    ) : (
+
+                            <Tooltip title="Filtrar lista">
+                                <IconButton aria-label="Filter list">
+                                    <FilterListIcon />
+                                </IconButton>
+                            </Tooltip>
+                        )}
+                </div>
+            </Toolbar>
+        );
     }
 };
 
