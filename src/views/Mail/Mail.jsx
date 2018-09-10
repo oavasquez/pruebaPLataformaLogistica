@@ -7,21 +7,15 @@ import AddAlert from "@material-ui/icons/AddAlert";
 // core components
 import GridItem from "../../components/Grid/GridItem.jsx";
 import GridContainer from "../../components/Grid/GridContainer.jsx";
-import Button from "../../components/CustomButtons/Button.jsx";
-import SnackbarContent from "../../components/Snackbar/SnackbarContent.jsx";
-import Snackbar from "../../components/Snackbar/Snackbar.jsx";
-import Card from "../../components/Card/Card.jsx";
-import CardHeader from "../../components/Card/CardHeader.jsx";
-import CardBody from "../../components/Card/CardBody.jsx";
-import BugReport from "@material-ui/icons/BugReport";
-import Code from "@material-ui/icons/Code";
-import Cloud from "@material-ui/icons/Cloud";
+
 import CustomTabs from "../../components/CustomTabs/CustomTabs";
-import Tasks from "../../components/Tasks/Tasks";
+
+
+import ImportExport from "@material-ui/icons/ImportExport";
 import Email from "@material-ui/icons/Email";
 import Chat from "@material-ui/icons/Chat";
 import ChatPage from './ChatPage'
-
+import ShowMessageList from './ShowMessageList';
 
 
 
@@ -61,56 +55,25 @@ const styles = {
 class Mail extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            tl: false,
-            tc: false,
-            tr: false,
-            bl: false,
-            bc: false,
-            br: false
-        };
+        this.state = {        };
         this.lertTimeout = null;
     }
-    componentWillUnmount() {
-        this.clearAlertTimeout();
-    }
-    clearAlertTimeout() {
-        if (this.alertTimeout !== null) {
-            clearTimeout(this.alertTimeout);
-        }
-    }
-    showNotification(place) {
-        var x = [];
-        x[place] = true;
-        this.setState(x);
-        this.clearAlertTimeout();
-        this.alertTimeout = setTimeout(
-            function () {
-                x[place] = false;
-                this.setState(x);
-            }.bind(this),
-            6000
-        );
-    }
+   
     render() {
         const { classes } = this.props;
         return (
             <GridContainer>
                 <GridItem xs={12} sm={12} md={12}>
                     <CustomTabs
-                    
+
                         headerColor="danger"
                         tabs={[
                             {
                                 tabName: "Mensajes sin leer",
                                 tabIcon: Email,
                                 tabContent: (
-                                    <Tasks
-                                    checkedIndexes={[1]}
-                                    tasksIndexes={[0, 1, 2]}
-                                    tasks={server}
-                                />
-                                   
+                                    <ShowMessageList />
+
 
                                 )
                             },
@@ -119,6 +82,16 @@ class Mail extends React.Component {
                                 tabIcon: Chat,
                                 tabContent: (
                                     <ChatPage />
+
+
+                                )
+                            },
+                            {
+                                tabName: "Exportar",
+                                tabIcon: ImportExport,
+                                tabContent: (
+                                    <div>
+                                    </div>
 
 
                                 )

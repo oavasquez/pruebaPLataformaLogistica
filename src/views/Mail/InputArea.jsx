@@ -15,7 +15,7 @@ const InputArea = ({  }) => (
         <Grid container style={{ marginTop: 10 }}>
           
               <TextField
-                label="Your Message"
+                label="Escribe tu mensaje"
                 style={{ flexGrow: 1 }}
                 onKeyDown={event => {
                   if (event.key === "Enter") {
@@ -33,7 +33,7 @@ const InputArea = ({  }) => (
               
             }}
           >
-            Send
+            Enviar
           </Button>
         </Grid>
       );

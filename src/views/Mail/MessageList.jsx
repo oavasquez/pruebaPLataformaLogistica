@@ -46,13 +46,13 @@ const styles = theme => ({
   paper1: {
     margin: theme.spacing.unit,
     padding: theme.spacing.unit * 2,
-    maxWidth: 600,
+    maxWidth: '60%',
     backgroundColor: "#FFAB91",
   },
   paper2: {
     margin: theme.spacing.unit,
     padding: theme.spacing.unit * 2,
-    maxWidth: 600,
+    maxWidth: '60%',
     backgroundColor: "#B3E5FC",
   },
 });
@@ -72,7 +72,7 @@ class Message extends React.Component {
     this.scrollToBottom();
   }
 
-  
+
 
   render() {
 
@@ -82,8 +82,11 @@ class Message extends React.Component {
       <GridContainer>
         <GridItem xs={12} sm={12} md={3}>
           <div className={classes.barchat}>
-            <List>
-              <ListItem>
+            <div
+              ref={(el) => { this.messagesEnd = el; }}>
+            </div>
+            <List component="nav">
+              <ListItem button>
                 <Badge color="primary" badgeContent={1}>
                   <Avatar src={avatar} />
                 </Badge>
@@ -92,7 +95,7 @@ class Message extends React.Component {
               <li>
                 <Divider inset />
               </li>
-              <ListItem>
+              <ListItem button>
                 <Badge color="secondary" badgeContent={3}>
                   <Avatar src={avatar} />
                 </Badge>
@@ -101,7 +104,7 @@ class Message extends React.Component {
               <li>
                 <Divider inset />
               </li>
-              <ListItem>
+              <ListItem button>
                 <Badge color="secondary" badgeContent={4}>
                   <Avatar src={avatar} />
                 </Badge>
@@ -110,7 +113,7 @@ class Message extends React.Component {
               <li>
                 <Divider inset />
               </li>
-              <ListItem>
+              <ListItem button>
                 <Badge color="secondary" badgeContent={8}>
                   <Avatar src={avatar} />
                 </Badge>
@@ -119,7 +122,7 @@ class Message extends React.Component {
               <li>
                 <Divider inset />
               </li>
-              <ListItem>
+              <ListItem button>
                 <Badge color="secondary" badgeContent={10}>
                   <Avatar src={avatar} />
                 </Badge>
@@ -128,7 +131,7 @@ class Message extends React.Component {
               <li>
                 <Divider inset />
               </li>
-              <ListItem>
+              <ListItem button>
                 <Badge color="secondary" badgeContent={4}>
                   <Avatar src={avatar} />
                 </Badge>
@@ -137,7 +140,7 @@ class Message extends React.Component {
               <li>
                 <Divider inset />
               </li>
-              <ListItem>
+              <ListItem button>
                 <Badge color="secondary" badgeContent={4}>
                   <Avatar src={avatar} />
                 </Badge>
@@ -146,7 +149,7 @@ class Message extends React.Component {
               <li>
                 <Divider inset />
               </li>
-              <ListItem>
+              <ListItem button>
                 <Badge color="secondary" badgeContent={4}>
                   <Avatar src={avatar} />
                 </Badge>
@@ -155,7 +158,7 @@ class Message extends React.Component {
               <li>
                 <Divider inset />
               </li>
-              <ListItem>
+              <ListItem button>
                 <Badge color="secondary" badgeContent={4}>
                   <Avatar src={avatar} />
                 </Badge>
@@ -164,10 +167,10 @@ class Message extends React.Component {
               <li>
                 <Divider inset />
               </li>
-            
+
             </List>
-            
-            
+
+
 
 
 
@@ -401,7 +404,7 @@ class Message extends React.Component {
                 </Grid>
               </Paper>
             </Grid>
-            <div style={{ float: "left", clear: "both" }}
+            <div
               ref={(el) => { this.messagesEnd = el; }}>
             </div>
 
