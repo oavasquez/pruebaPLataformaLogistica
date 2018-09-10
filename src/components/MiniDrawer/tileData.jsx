@@ -87,11 +87,15 @@ export const mailFolderListItems = (
 
 export const otherMailFolderListItems = (
   <div>
+    <NavLink
+      to={"/correos"}
+     >
     <ListItem button>
       <ListItemIcon>
         <MailIcon />
       </ListItemIcon>
       <ListItemText primary="Correos" />
     </ListItem>
+    </NavLink>
   </div>
 );
