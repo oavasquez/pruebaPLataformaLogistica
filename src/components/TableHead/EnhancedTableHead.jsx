@@ -14,16 +14,6 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Tooltip from '@material-ui/core/Tooltip';
 
 
-const rows = [
-    { id: 'id', numeric: false, disablePadding: true, label: 'Id' },
-    { id: 'nombreUsuario', numeric: true, disablePadding: false, label: 'Nombre Usuario' },
-    { id: 'nombre', numeric: true, disablePadding: false, label: 'Nombre' },
-    { id: 'tipoUsuario', numeric: true, disablePadding: false, label: 'Tipo Usuario' },
-    { id: 'fechaCreacion', numeric: true, disablePadding: false, label: 'Fecha Creacion' },
-];
-
-
-
 const styles = theme => ({
   
     TableRow:{
@@ -53,7 +43,7 @@ handleDelete = () => {
    
 
 render() {
-    const { onSelectAllClick, order, orderBy, numSelected, rowCount, selected} = this.props;
+    const { onSelectAllClick, order, orderBy, numSelected, rowCount, rows} = this.props;
     const { classes } = this.props;
     return (
         <TableHead>

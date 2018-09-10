@@ -1,8 +1,8 @@
 import React from "react";
 // @material-ui/core components
 import withStyles from "@material-ui/core/styles/withStyles";
-import InputLabel from "@material-ui/core/InputLabel";
 // core components
+
 import GridItem from "../../components/Grid/GridItem.jsx";
 import GridContainer from "../../components/Grid/GridContainer.jsx";
 import CustomInput from "../../components/CustomInput/CustomInput.jsx";
@@ -14,7 +14,8 @@ import CardBody from "../../components/Card/CardBody.jsx";
 import CardFooter from "../../components/Card/CardFooter.jsx";
 
 import avatar from "../../assets/img/faces/marc.jpg";
-import { rename } from "fs";
+import rappiAvatar from "../../assets/img/faces/rappi.png";
+
 
 const styles = {
   cardCategoryWhite: {
@@ -36,13 +37,12 @@ const styles = {
 };
 
 
-class UserProfile extends React.Component {
+class Paquete extends React.Component {
 
   state = {
     valor: {},
     actualizar: false
   }
-
 
   handleActualizar = () => {
     this.setState(state => ({
@@ -51,35 +51,81 @@ class UserProfile extends React.Component {
 
   }
 
-  render() {
 
+  render() {
+    const { valor } = this.props.location.state
     const { classes } = this.props;
 
-    const { valor } = this.props.location.state
-    
     return (
       <div>
         <GridContainer>
-          <GridItem xs={12} sm={12} md={8}>
+        <GridItem xs={12} sm={12} md={3}>
+            <Card profile>
+              <CardAvatar profile>
+                <a href="#pablo" onClick={e => e.preventDefault()}>
+                  <img src={rappiAvatar} alt="..." />
+                </a>
+              </CardAvatar>
+
+              <CardBody profile>
+                <h6 className={classes.cardCategory}>{valor.tipoCliente}</h6>
+                <h4 className={classes.cardTitle}>{valor.nombre}</h4>
+                <p className={classes.description}>
+                  Hitorial de mensajes con el cliente
+                  </p>
+
+                <Button color="info" round>
+                  Contactar Encargado
+                </Button>
+                <Button color="info" round>
+                  Ver Perfil
+                </Button>
+              </CardBody>
+            </Card>
+          </GridItem>
+          <GridItem xs={12} sm={12} md={3}>
+            <Card profile>
+              <CardAvatar profile>
+                <a href="#pablo" onClick={e => e.preventDefault()}>
+                  <img src={avatar} alt="..." />
+                </a>
+              </CardAvatar>
+
+              <CardBody profile>
+                <h6 className={classes.cardCategory}>{valor.tipoCliente}</h6>
+                <h4 className={classes.cardTitle}>{valor.nombre}</h4>
+                <p className={classes.description}>
+                  Historial de mensajes con el encargado
+                  </p>
+                <Button color="success" round>
+                  Contactar cliente
+                </Button>
+                <Button color="success" round>
+                  Ver Perfil
+                </Button>
+              </CardBody>
+            </Card>
+          </GridItem>
+          <GridItem xs={12} sm={12} md={6}>
             <Card>
               {this.state.actualizar ?
                 <CardHeader color="success">
-                  <h4 className={classes.cardTitleWhite}>Editando perfil del usuario</h4>
-                  <p className={classes.cardCategoryWhite}>Perfil del usuario</p>
-                </CardHeader> 
+                  <h4 className={classes.cardTitleWhite}>Editando informacion del paquete</h4>
+                 
+                </CardHeader>
                 :
                 <CardHeader color="primary">
-                  <h4 className={classes.cardTitleWhite}>Informacion del Perfil</h4>
-                  <p className={classes.cardCategoryWhite}>Perfil del usuario</p>
+                  <h4 className={classes.cardTitleWhite}>Informacion del Paquete</h4>
+                 
                 </CardHeader>
               }
               <CardBody>
                 <GridContainer>
-                  <GridItem xs={12} sm={12} md={3}>
+                  <GridItem xs={12} sm={12} md={12}>
                     <CustomInput
-                      labelText="Usuario"
+                      labelText="Nombre del paquete"
                       id="usuario"
-                      value={valor.nombreUsuario}
+                      value={valor.entrega}
                       formControlProps={{
                         fullWidth: true
                       }}
@@ -162,37 +208,15 @@ class UserProfile extends React.Component {
               <CardFooter>
                 {this.state.actualizar ?
                   <Button onClick={this.handleActualizar} color="success">Aplicar Cambios</Button>
-                  : <Button onClick={this.handleActualizar} color="primary">Actualizar perfil</Button>}
+                  : <Button onClick={this.handleActualizar} color="primary">Actualizar informacion</Button>}
               </CardFooter>
             </Card>
           </GridItem>
-          <GridItem xs={12} sm={12} md={4}>
-            <Card profile>
-              <CardAvatar profile>
-                <a href="#pablo" onClick={e => e.preventDefault()}>
-                  <img src={avatar} alt="..." />
-                </a>
-              </CardAvatar>
-
-              <CardBody profile>
-                <h6 className={classes.cardCategory}>{valor.tipoCliente}</h6>
-                <h4 className={classes.cardTitle}>{valor.nombre}</h4>
-                <p className={classes.description}>
-                  Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró hacer un libro de textos especimen.
-              </p>
-                <Button color="primary" round>
-                  Bloquear
-              </Button>
-                <Button color="danger" round>
-                  Eliminar
-              </Button>
-              </CardBody>
-            </Card>
-          </GridItem>
+          
         </GridContainer>
       </div>
     );
   }
 }
 
-export default withStyles(styles)(UserProfile);
+export default withStyles(styles)(Paquete);

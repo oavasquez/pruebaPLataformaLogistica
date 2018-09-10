@@ -52,19 +52,13 @@ const styles = theme => ({
     tableWrapper: {
         overflowX: 'auto',
     },
-    TableRow:{
-        textAlign:'center'
+    TableRow: {
+        textAlign: 'center'
     }
 
 });
 
 class TableUser extends React.Component {
-
-    counter = 0;
-    createData=(nombreUsuario, nombre, tipoUsuario, correo, telefono,pais,ciudad, fechaCreacion)=>{
-        this.counter += 1;
-        return { id: this.counter, nombreUsuario, nombre, tipoUsuario, correo, telefono,pais, ciudad, fechaCreacion };
-    }
 
     state = {
         open: false,
@@ -74,15 +68,7 @@ class TableUser extends React.Component {
         columnaNombre: '',
         valorBuscar: 0,
         filtrar: false,
-        data: [
-            this.createData('ramires123', 'jimenez ramirez', 'Cliente','asd@asd.com','123456789','Honduras','Tegucigalpa', '2017-04-03'),
-            this.createData('2vasquezo', 'aOscar Andres Vasquez', 'Cliente','asd@asd.com','123456789','Honduras','Tegucigalpa', '2017-05-03'),
-            this.createData('2vasquezo', 'aOscar Andres Vasquez', 'Cliente','asd@asd.com','123456789','Honduras','Tegucigalpa', '2017-06-03'),
-            this.createData('2vasquezo', 'aOscar Andres Vasquez', 'Cliente','asd@asd.com','123456789','Honduras','Tegucigalpa', '2017-07-03'),
-            this.createData('2vasquezo', 'aOscar Andres Vasquez', 'Cliente','asd@asd.com','123456789','Honduras','Tegucigalpa', '2017-08-03'),
-            this.createData('2vasquezo', 'aOscar Andres Vasquez', 'Cliente','asd@asd.com','123456789','Honduras','Tegucigalpa', '2017-09-03'),
-            
-        ],
+        data: [{}],
         page: 0,
         rowsPerPage: 10,
     };
@@ -159,8 +145,8 @@ class TableUser extends React.Component {
     isSelected = id => this.state.selected.indexOf(id) !== -1;
 
     render() {
-        const { classes, title, colortable} = this.props;
-        const { data, order, orderBy, selected, rowsPerPage, page, open, } = this.state;
+        const { classes, title, colortable, data, rows, mostrarDatos } = this.props;
+        const { order, orderBy, selected, rowsPerPage, page, open, } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
         return (
@@ -180,6 +166,7 @@ class TableUser extends React.Component {
                         <CardBody>
                             <Paper className={classes.root}>
                                 <EnhancedTableToolbar
+                                    rows={rows}
                                     numSelected={selected.length}
                                     selected={selected}
                                     handleOpenModal={this.cambioEstadoModal.bind(this)}
@@ -188,6 +175,7 @@ class TableUser extends React.Component {
                                 <div className={classes.tableWrapper}>
                                     <Table className={classes.table} aria-labelledby="tableTitle">
                                         <EnhancedTableHead
+                                            rows={rows}
                                             numSelected={selected.length}
                                             selected={selected}
                                             order={order}
@@ -213,7 +201,7 @@ class TableUser extends React.Component {
                                                     .map(n => {
                                                         const isSelected = this.isSelected(n.id);
                                                         return (
-                                                            <TableRow 
+                                                            <TableRow
                                                                 hover
                                                                 onClick={event => this.handleClick(event, n.id)}
                                                                 role="checkbox"
@@ -225,15 +213,22 @@ class TableUser extends React.Component {
                                                                 <TableCell className={classes.TableRow} padding="checkbox">
                                                                     <Checkbox checked={isSelected} />
                                                                 </TableCell>
-                                                                <TableCell className={classes.TableRow}component="th" scope="row" padding="none">
+                                                                <TableCell className={classes.TableRow} component="th" scope="row" padding="none">
                                                                     {n.id}
                                                                 </TableCell>
-                                                                <TableCell className={classes.TableRow}>
-                                                                    <Link to={{pathname:"/userProfile", state:{user: n}}} >{n.nombreUsuario}</Link>
-                                                                </TableCell>
-                                                                <TableCell className={classes.TableRow}>{n.nombre}</TableCell>
-                                                                <TableCell className={classes.TableRow}>{n.tipoUsuario}</TableCell>
-                                                                <TableCell className={classes.TableRow}>{n.fechaCreacion}</TableCell>
+
+                                                                {mostrarDatos.map(x => {
+                                                                    return (
+                                                                        x.enlace ? (
+                                                                            <TableCell className={classes.TableRow} component="th" scope="row" padding="none">
+                                                                                <Link to={{ pathname: x.pathname, state: { valor: n } }} key={n[x.campo]}>{n[x.campo]}</Link>
+                                                                            </TableCell>
+                                                                        )
+                                                                            : (
+                                                                                <TableCell className={classes.TableRow} >{n[x.campo]}</TableCell>)
+                                                                    )
+
+                                                                })}
                                                             </TableRow>
                                                         );
                                                     })
