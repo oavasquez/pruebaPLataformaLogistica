@@ -16,7 +16,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import UserProfile from "../../views/UserProfile/UserProfile.jsx";
 import TableList from "../../views/TableList/TableList.jsx";
-import Entregas from "../../views/Entregas/Entregas";
+import  Entregas from "../../views/Entregas/Entregas";
 import Icons from "../../views/Icons/Icons.jsx";
 import Maps from "../../views/Maps/Maps.jsx";
 import ShowUsers from "../../views/ShowUsers/ShowUsers.jsx";
@@ -323,7 +323,7 @@ class App extends Component {
                   <PrivateRoute
                     authed={this.state.authed}
                     path="/entregas"
-                    component={Entregas}
+                    component={TableList}
                   />
                   <PrivateRoute
                     authed={this.state.authed}
