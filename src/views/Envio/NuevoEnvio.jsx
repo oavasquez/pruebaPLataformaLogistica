@@ -15,6 +15,7 @@ import CardFooter from "../../components/Card/CardFooter.jsx";
 
 import avatar from "../../assets/img/faces/marc.jpg";
 import rappiAvatar from "../../assets/img/faces/rappi.png";
+import TableDynamic from "../../components/Table/TableDynamic";
 
 
 const styles = {
@@ -35,6 +36,35 @@ const styles = {
     textDecoration: "none"
   }
 };
+
+let counter = 0;
+function createData(          idRastreo, cliente,telefono, direccion, descripcion){
+        counter += 1;
+        return { id: counter, idRastreo, cliente,telefono, direccion, descripcion};
+}
+
+const data= [
+  createData('12312', 'Elmer Padilla','9898-9898','ciudad 1, colonia 1 casa 1','es un paquete de prueba',""),
+]
+
+const mostrarDatos=[   
+  {campo : "idRastreo",enlace:false, pathname:""},
+  {campo : "cliente",enlace:false, pathname:" "},
+  {campo : "telefono",enlace:false, pathname:" "},
+  {campo : "direccion",enlace:false, pathname:" "},
+  {campo : "descripcion",enlace:false, pathname:" "} 
+  
+]
+
+const rows = [
+  { id: 'idRegistro', numeric: false, disablePadding: true, label: 'Id' },
+  { id: 'idRastreo', numeric: false, disablePadding: false, label: 'Codigo Rastreo' },
+  { id: 'cliente', numeric: false, disablePadding: false, label: 'Cliente' },
+  { id: 'telefono', numeric: false, disablePadding: false, label: 'Telefono' },
+  { id: 'direccion', numeric: false, disablePadding: false, label: 'Direccion' },
+  { id: 'descripcion', numeric: false, disablePadding: false, label: 'Descripcion' },
+  { id: 'opcion', numeric: false, disablePadding: false, label: 'Opciones' },
+];
 
 
 class NuevoEnvio extends React.Component {
@@ -87,7 +117,7 @@ class NuevoEnvio extends React.Component {
                         fullWidth: true
                       }}
                       inputProps={{
-                        disabled: !this.state.actualizar
+                        disabled: this.state.actualizar
                       }}
 
                     />
@@ -97,7 +127,7 @@ class NuevoEnvio extends React.Component {
                       labelText="Estado"
                       id="username"
                       inputProps={{
-                        disabled: !this.state.actualizar
+                        disabled: this.state.actualizar
                       }}
                      
                       formControlProps={{
@@ -110,7 +140,7 @@ class NuevoEnvio extends React.Component {
                       labelText="fecha"
                       id="email"
                       inputProps={{
-                        disabled: !this.state.actualizar
+                        disabled: this.state.actualizar
                       }}
                      
                       formControlProps={{
@@ -121,6 +151,13 @@ class NuevoEnvio extends React.Component {
                 </GridContainer>
                 <GridContainer>
                   <GridItem xs={12} sm={12} md={12}>
+                  <TableDynamic
+                   title={"Lista de Usuarios"}
+                   colortable={"success"}
+                   data={data}
+                   rows={rows}
+                   mostrarDatos={mostrarDatos}
+                  />
                     
                   </GridItem>
                 </GridContainer>
@@ -128,7 +165,7 @@ class NuevoEnvio extends React.Component {
               <CardFooter>
                 {this.state.actualizar ?
                   <Button onClick={this.handleActualizar} color="success">Actualizar informacion</Button>
-                  : <Button onClick={this.handleActualizar} color="primary">Guardar</Button>}
+                  : <Button onClick={this.handleActualizar} color="primary">Solicitar Entrega</Button>}
               </CardFooter>
             </Card>
           </GridItem>
