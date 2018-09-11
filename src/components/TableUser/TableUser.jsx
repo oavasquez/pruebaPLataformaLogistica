@@ -20,10 +20,8 @@ import CardBody from "../Card/CardBody.jsx";
 import AlertDialog from '../Alert/Alert';
 import EnhancedTableToolbar from '../TableToolbar/EnhancedTableToolbar';
 import EnhancedTableHead from '../TableHead/EnhancedTableHead';
+import Notifications from '../Notifications/Notifications';
 import { Link } from "react-router-dom";
-
-
-
 
 
 function desc(a, b, orderBy) {
@@ -62,6 +60,7 @@ class TableUser extends React.Component {
 
     state = {
         open: false,
+        openNotificacion:false,
         order: 'asc',
         orderBy: 'id',
         selected: [],
@@ -126,9 +125,12 @@ class TableUser extends React.Component {
 
     cambioEstadoModal(values) {
         this.setState({
-            open: values
+            open: values,
+            openNotificacion:!values,
         });
     }
+
+
 
     filtrarTabla(values) {
 
@@ -146,13 +148,17 @@ class TableUser extends React.Component {
 
     render() {
         const { classes, title, colortable, data, rows, mostrarDatos } = this.props;
-        const { order, orderBy, selected, rowsPerPage, page, open, } = this.state;
+        const { order, orderBy, selected, rowsPerPage, page, open, openNotificacion } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
         return (
 
 
             <GridContainer>
+                <Notifications
+                mensaje="esto es una prueba "
+                open={true}
+                />
                 <AlertDialog
                     open={open}
                     cantidad={selected.length}
