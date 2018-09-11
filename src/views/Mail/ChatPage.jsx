@@ -25,16 +25,11 @@ class ChatPage extends React.Component {
 
     return (
       <Grid container justify="center">
-        <Grid item style={{ flexGrow: 1, maxWidth: 1000 }}>
-          <Grid container>
-            <Grid item xs={12}>
-              <Paper elevation={2} style={{ padding: 20 }}>
+        
                 <MessageList  />
                 <InputArea  />
-              </Paper>
-            </Grid>
-          </Grid>
-        </Grid>
+            
+          
       </Grid>
     );
   }

@@ -17,69 +17,84 @@ import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
 import MotorcycleIcon from '@material-ui/icons/Motorcycle';
 import GpsFixedIcon from '@material-ui/icons/GpsFixed';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import Send from '@material-ui/icons/Send';
+
+
 
 import { NavLink } from "react-router-dom";
 
 
 export const mailFolderListItems = (
   <div>
-     <NavLink
+    <NavLink
       to={"/dashboard"}
-     >
-    <ListItem button>
-      <ListItemIcon>
-        <DasboardIcon />
-      </ListItemIcon>
-      <ListItemText primary="Dashboard" />
-    </ListItem>
+    >
+      <ListItem button>
+        <ListItemIcon>
+          <DasboardIcon />
+        </ListItemIcon>
+        <ListItemText primary="Dashboard" />
+      </ListItem>
+    </NavLink>
+
+
+    <NavLink
+      to={"/envios"}
+    >
+      <ListItem button>
+        <ListItemIcon>
+          <Send/>
+        </ListItemIcon>
+        <ListItemText primary="Enviar" />
+      </ListItem>
     </NavLink>
 
     <NavLink
       to={"/user"}
-     >
-    <ListItem button>
-      <ListItemIcon>
-        <SupervisedUserCircleIcon />
-      </ListItemIcon>
-      <ListItemText primary="Usuarios" />
-    </ListItem>
+    >
+      <ListItem button>
+        <ListItemIcon>
+          <SupervisedUserCircleIcon />
+        </ListItemIcon>
+        <ListItemText primary="Usuarios" />
+      </ListItem>
     </NavLink>
 
 
-  <NavLink
+    <NavLink
       to={"/entregas"}
-     >
-    <ListItem button>
-      <ListItemIcon>
-        <MotorcycleIcon />
-      </ListItemIcon>
-      <ListItemText primary="Entregas" />
-    </ListItem>
+    >
+      <ListItem button>
+        <ListItemIcon>
+          <MotorcycleIcon />
+        </ListItemIcon>
+        <ListItemText primary="Entregas" />
+      </ListItem>
     </NavLink>
 
 
 
 
-<NavLink
+    <NavLink
       to={"/rastreo"}
-     >
-    <ListItem button>
-      <ListItemIcon>
-        <GpsFixedIcon />
-      </ListItemIcon>
-      <ListItemText primary="Rastreo paquetes" />
-    </ListItem>
+    >
+      <ListItem button>
+        <ListItemIcon>
+          <GpsFixedIcon />
+        </ListItemIcon>
+        <ListItemText primary="Rastreo paquetes" />
+      </ListItem>
     </NavLink>
-    
+
     <NavLink
       to={"/notifications"}
-     >
+    >
       <ListItem button>
-      <ListItemIcon>
-        <NotificationsIcon />
-      </ListItemIcon>
-      <ListItemText primary="Notificaciones" />
-    </ListItem>
+        <ListItemIcon>
+          <NotificationsIcon />
+        </ListItemIcon>
+        <ListItemText primary="Notificaciones" />
+      </ListItem>
 
     </NavLink>
   </div>
@@ -89,13 +104,13 @@ export const otherMailFolderListItems = (
   <div>
     <NavLink
       to={"/correos"}
-     >
-    <ListItem button>
-      <ListItemIcon>
-        <MailIcon />
-      </ListItemIcon>
-      <ListItemText primary="Correos" />
-    </ListItem>
+    >
+      <ListItem button>
+        <ListItemIcon>
+          <MailIcon />
+        </ListItemIcon>
+        <ListItemText primary="Correos" />
+      </ListItem>
     </NavLink>
   </div>
 );

@@ -21,6 +21,7 @@ import Paquete from "../../views/Paquete/Paquete";
 import Mail from "../../views/Mail/Mail";
 import Icons from "../../views/Icons/Icons.jsx";
 import Maps from "../../views/Maps/Maps.jsx";
+import Envio from "../../views/Envio/Envio";
 import ShowUsers from "../../views/ShowUsers/ShowUsers.jsx";
 import NotificationsPage from "../../views/Notifications/Notifications.jsx";
 import Grid from '@material-ui/core/Grid';
@@ -33,6 +34,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 
 import dashboardRoutes from "../../routes/dashboard.jsx";
+import NuevoEnvio from '../../views/Envio/NuevoEnvio';
 
 
 
@@ -44,9 +46,16 @@ const styles = theme => ({
   flex: {
     flex: 1,
   },
+  minidrawer:{
+    position: 'relative',
+  },
   container: {
     textAlign: 'center',
     Paddingbottom: "0",
+  },
+  content:{
+    paddingTop: 40,
+
   },
   progress: {
     margin: theme.spacing.unit * 2,
@@ -229,7 +238,7 @@ class App extends Component {
           <Grid container spacing={24}>
             <Grid item md={12}>
               <AppBar
-                position="sticky"
+                position="fixed"
                 className={classNames(classes.appBar, this.state.open && classes.appBarShift)}
               >
                 <Toolbar disableGutters={!this.state.open}>
@@ -296,7 +305,7 @@ class App extends Component {
 
 
             <Grid item md={this.state.open ? 2 : 1}>
-              <div className={classNames(classes.menuButton, !this.state.authed && classes.hide)}>
+              <div className={classNames(classes.minidrawer, !this.state.authed && classes.hide)}>
                 <Minidrawer
                   onSelectLanguage={this.cambioEstadoBar.bind(this)}
                   open={this.state.open}
@@ -309,7 +318,7 @@ class App extends Component {
             </Grid>
             <Grid item md={this.state.open ? 10 : 11} >
 
-              <div >
+              <div className={classes.content}>
                 <Switch>
                   <Route path="/" exact component={Home} />
                   <PublicRoute
@@ -351,6 +360,16 @@ class App extends Component {
                     authed={this.state.authed}
                     path="/maps"
                     component={Maps}
+                  />
+                  <PrivateRoute
+                    authed={this.state.authed}
+                    path="/envios"
+                    component={Envio}
+                  />
+                   <PrivateRoute
+                    authed={this.state.authed}
+                    path="/nuevoEnvio"
+                    component={NuevoEnvio}
                   />
                   <PrivateRoute
                     authed={this.state.authed}
