@@ -13,35 +13,28 @@ import AddIcon from '@material-ui/icons/Add';
 
 import { NavLink } from "react-router-dom";
 
-let counter = 0;
-function createData(id, fechaElaboracion, estadoEnvio, idRastreo, nombreCliente, estado, numeroContacto, direccionContacto) {
-    return { id, fechaElaboracion, estadoEnvio, idRastreo, nombreCliente, estado, numeroContacto, direccionContacto };
+import { db } from '../../config/constants.jsx';
+
+
+function createDataEnvio(idEnvio ,id, fechaElaboracion, estadoEnvio, move) {
+    return { idEnvio,id, fechaElaboracion, estadoEnvio, move};
 }
 
-const data = [
-    createData('12123345', '12/09/2018', 'Nuevo', '12331', 'jimenez ramirez', '9997-9798', 'Fco. Morazán, Tegucigalpa MDC, Blvd. Suyapa Contiguo Hospital Escuela.'),
-    createData('12324346', '01/09/2018', 'Solicitado', '12345', 'Ana Pineda', '9997-9798', 'Fco. Morazán, Tegucigalpa MDC, Blvd. Suyapa Contiguo Hospital Escuela.'),
-    createData('12323467', '10/09/2018', 'Aceptado', '14353', 'Jose Gonzales', '9997-9798', 'Fco. Morazán, Tegucigalpa MDC, Blvd. Suyapa Contiguo Hospital Escuela.'),
-    createData('12312325', '11/09/2018', 'Aceptado', '12343', 'Pedro Mejia', '9997-9798', 'Fco. Morazán, Tegucigalpa MDC, Blvd. Suyapa Contiguo Hospital Escuela.'),
-    createData('12123423', '15/09/2018', 'A recoger', '45435', 'Juan Salgado', '9997-9798', 'Fco. Morazán, Tegucigalpa MDC, Blvd. Suyapa Contiguo Hospital Escuela.'),
-    createData('12313223', '13/09/2018', 'Recibido', '45674', 'Allan Lopez', '9997-9798', 'Fco. Morazán, Tegucigalpa MDC, Blvd. Suyapa Contiguo Hospital Escuela.'),
-
-]
 
 const mostrarDatos = [
-    { campo: "fechaElaboracion", enlace: true, pathname: " " },
+    { campo: "id", enlace: true, pathname: "/nuevoEnvio" },
+    { campo: "fechaElaboracion", enlace: false, pathname: " " },
     { campo: "estadoEnvio", enlace: false, pathname: " " },
-    { campo: "idRastreo", enlace: false, pathname: " " },
-    { campo: "nombreCliente", enlace: false, pathname: " " }
+   
 
 ]
 
 const rows = [
+   
     { id: 'id', numeric: false, disablePadding: false, label: 'Codigo de Envio' },
     { id: 'fechaElaboracion', numeric: false, disablePadding: false, label: 'Fecha Elaboracion' },
     { id: 'estadoEnvio', numeric: false, disablePadding: false, label: 'Estado del envio' },
-    { id: 'idRastreo', numeric: false, disablePadding: false, label: 'Codigo de Rastreo' },
-    { id: 'nombreCliente', numeric: false, disablePadding: false, label: 'Nombre Cliente' },
+ 
 ];
 
 const styles = theme => ({
@@ -65,6 +58,38 @@ const styles = theme => ({
 
 class Envio extends React.Component {
 
+    constructor(props) {
+        super(props);
+
+        this.mostrarDatosBD = this.mostrarDatosBD.bind(this);
+    }
+
+    state={
+        data:[]
+    }
+
+    componentDidMount() {
+        this.mostrarDatosBD()
+    }
+
+
+    mostrarDatosBD = () => {
+        db.collection("manifest")
+            .get()
+            .then(function (querySnapshot) {
+                querySnapshot.forEach(function (doc) {
+                    // doc.data() is never undefined for query doc snapshots
+                   
+                    this.setState({ data: [...this.state.data, createDataEnvio(doc.id, doc.data().codigoEnvio,doc.data().fechaCreacion,doc.data().estado,doc.data().move)] });
+                }.bind(this));
+            }.bind(this))
+            .catch(function (error) {
+                console.log("Error getting documents: ", error);
+            });
+
+
+    }
+
     render() {
         const { classes } = this.props;
 
@@ -76,7 +101,7 @@ class Envio extends React.Component {
                         <TableUser
                             title={"Registro de envios"}
                             colortable={"info"}
-                            data={data}
+                            data={this.state.data}
                             rows={rows}
                             mostrarDatos={mostrarDatos}
                         />

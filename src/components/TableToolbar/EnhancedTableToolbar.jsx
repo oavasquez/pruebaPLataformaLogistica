@@ -140,7 +140,7 @@ class EnhancedTableToolbar extends React.Component {
                                     >
                                         <MenuItem value="" disabled>Selecciona una columna</MenuItem>
                                         {rows.map(n=>{
-                                            console.log(n.id)
+                                            
                                             return(
                                             <MenuItem value={n.id}>{n.label}</MenuItem>
                                             )

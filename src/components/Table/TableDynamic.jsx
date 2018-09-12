@@ -260,9 +260,9 @@ class TableDynamic extends React.Component {
 
 
     render() {
-        const { classes, title, colortable, rows, mostrarDatos } = this.props;
+        const { classes, title, colortable, rows, mostrarDatos, data } = this.props;
         const { order, orderBy, selected, rowsPerPage, page, open, openNotificacion, modalOpen } = this.state;
-        const emptyRows = rowsPerPage - Math.min(rowsPerPage, this.state.data.length - page * rowsPerPage);
+        const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
 
         return (
@@ -358,16 +358,15 @@ class TableDynamic extends React.Component {
                                 orderBy={orderBy}
                                 onSelectAllClick={this.handleSelectAllClick}
                                 onRequestSort={this.handleRequestSort}
-                                rowCount={this.state.data.length}
+                                rowCount={data.length}
                             />
                             <TableBody>
                                 {
 
-                                    this.state.data.length > 0 ? (
+                                    data.length > 0 ? (
 
-
-                                        this.state.data
-                                            .filter(
+                                    
+                                       data.filter(
                                                 this.state.filtrar ?
                                                     (function (x) {
                                                         return String(x[this.state.columnaNombre]).toLowerCase().indexOf(this.state.valorBuscar.toLowerCase()) > -1;
@@ -462,7 +461,7 @@ class TableDynamic extends React.Component {
                     </div>
                     <TablePagination
                         component="div"
-                        count={this.state.data.length}
+                        count={data.length}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         backIconButtonProps={{

@@ -219,9 +219,7 @@ class TableUser extends React.Component {
                                                                 <TableCell className={classes.TableRow} padding="checkbox">
                                                                     <Checkbox checked={isSelected} />
                                                                 </TableCell>
-                                                                <TableCell className={classes.TableRow} component="th" scope="row" padding="none">
-                                                                    {n.id}
-                                                                </TableCell>
+                                                               
 
                                                                 {mostrarDatos.map(x => {
                                                                     return (

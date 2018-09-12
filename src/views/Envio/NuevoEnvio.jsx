@@ -45,6 +45,10 @@ function createData(idRastreo, cliente, telefono, direccion, descripcion) {
   return { id: counter, idRastreo, cliente, telefono, direccion, descripcion};
 }
 
+function createDataEnvios(id, idRastreo, cliente, telefono, direccion,direccionShort,descripcion, descripcionShort,idEnvios) {
+  return { id , idRastreo, cliente, telefono, direccion,direccionShort,  descripcion, descripcionShort,idEnvios};
+}
+
 const data = [
   createData('12312', 'Elmer Padilla', '9898-9898', 'ciudad 1, colonia 1 casa 1', 'es un paquete de prueba', ""),
 ]
@@ -84,6 +88,36 @@ class NuevoEnvio extends React.Component {
     estado: ''
   }
 
+  componentDidMount(){
+    const { valor } = this.props.location.state
+
+    var docRef = db.collection("move")
+
+    valor.move.map(function(x){
+
+
+      docRef.doc(x).get().then(function(doc)  {
+        if (doc.exists) {
+            this.setState({data:[...this.state.data, createDataEnvios(doc.data().id, doc.data().idRastreo, doc.data().cliente, doc.data().telefono, doc.data().direccion,String(doc.data().direccion).substr(0,10), doc.data().descripcion,String(doc.data().descripcion).substr(0,10),doc.id)]})
+    
+          } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+        }
+    }.bind(this)).catch(function(error) {
+        console.log("Error getting document:", error);
+    }); 
+
+
+    }.bind(this))
+
+
+   
+
+  
+
+  }
+
   handleActualizar = () => {
     this.setState(state => ({
       actualizar: !state.actualizar
@@ -101,21 +135,17 @@ class NuevoEnvio extends React.Component {
     const newMoves = db.collection("move");
     const newManifest = db.collection("manifest").doc();
 
- 
 
-    console.log(this.state.data)
-    let move=[]
+    let moves=[]
     this.state.data.map(function (x) {
 
       
       newMoves.add(x).then(function (docRef) {
         
-        move.push(docRef.id)
-        console.log(move)
+        moves.push(docRef.id)
 
-        newManifest.set(createDataManifest(this.state.codigoEnvio, this.state.fechaCreacion, this.state.estado, move)).then(function (docRef) {
+        newManifest.set(createDataManifest(this.state.codigoEnvio, this.state.fechaCreacion, this.state.estado, moves)).then(function (docRef) {
           
-    
         }.bind(this))
           .catch(function (error) {
             console.error("Error adding document: ", error);
@@ -139,6 +169,8 @@ class NuevoEnvio extends React.Component {
 
 
   render() {
+    const { valor } = this.props.location.state
+    
 
     const { classes } = this.props;
 
@@ -174,6 +206,7 @@ class NuevoEnvio extends React.Component {
                         disabled: this.state.actualizar,
                         onChange: this.handleChangeInput
                       }}
+                      defaultValue={valor.id}
 
                     />
                   </GridItem>
@@ -185,6 +218,7 @@ class NuevoEnvio extends React.Component {
                         disabled: this.state.actualizar,
                         onChange: this.handleChangeInput
                       }}
+                      defaultValue={valor.estadoEnvio}
 
                       formControlProps={{
                         fullWidth: true
@@ -199,7 +233,8 @@ class NuevoEnvio extends React.Component {
                         disabled: this.state.actualizar,
                         onChange: this.handleChangeInput
                       }}
-
+                      
+                      defaultValue={valor.fechaElaboracion}
                       formControlProps={{
                         fullWidth: true
                       }}
@@ -211,7 +246,7 @@ class NuevoEnvio extends React.Component {
                     <TableDynamic
                       title={"Lista de Usuarios"}
                       colortable={"success"}
-                      data={data}
+                      data={this.state.data}
                       rows={rows}
                       mostrarDatos={mostrarDatos}
                       handleSaveTableJson={this.handleSaveDataJson.bind(this)}
