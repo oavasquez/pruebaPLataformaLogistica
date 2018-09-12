@@ -51,8 +51,8 @@ const mostrarDatos=[
   {campo : "idRastreo",enlace:false, pathname:""},
   {campo : "cliente",enlace:false, pathname:" "},
   {campo : "telefono",enlace:false, pathname:" "},
-  {campo : "direccion",enlace:false, pathname:" "},
-  {campo : "descripcion",enlace:false, pathname:" "} 
+  {campo : "direccionShort",enlace:false, pathname:" "},
+  {campo : "descripcionShort",enlace:false, pathname:" "} 
   
 ]
 
@@ -61,8 +61,8 @@ const rows = [
   { id: 'idRastreo', numeric: false, disablePadding: false, label: 'Codigo Rastreo' },
   { id: 'cliente', numeric: false, disablePadding: false, label: 'Cliente' },
   { id: 'telefono', numeric: false, disablePadding: false, label: 'Telefono' },
-  { id: 'direccion', numeric: false, disablePadding: false, label: 'Direccion' },
-  { id: 'descripcion', numeric: false, disablePadding: false, label: 'Descripcion' },
+  { id: 'direccionShort', numeric: false, disablePadding: false, label: 'Direccion' },
+  { id: 'descripcionShort', numeric: false, disablePadding: false, label: 'Descripcion' },
   { id: 'opcion', numeric: false, disablePadding: false, label: 'Opciones' },
 ];
 

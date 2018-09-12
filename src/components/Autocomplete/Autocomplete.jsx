@@ -68,6 +68,7 @@ function renderInputComponent(inputProps) {
 
     return (
         <TextField
+          
             fullWidth
             InputProps={{
                 inputRef: node => {
@@ -77,8 +78,11 @@ function renderInputComponent(inputProps) {
                 classes: {
                     input: classes.input,
                 },
+
             }}
             {...other}
+          
+
         />
     );
 }
@@ -91,19 +95,19 @@ function renderSuggestion(suggestion, { query, isHighlighted }) {
 
     return (
         <MenuItem selected={isHighlighted} component="div">
-          
-                <div>
-                    <strong key={String(1)} style={{ fontWeight: 300 }}>
-                        {arreglo[0]}
-                    </strong>
-                    <span key={String(2)} style={{ fontWeight: 500 }}>
-                        {query}
-                    </span>
-                    <strong key={String(3)} style={{ fontWeight: 300 }}>
-                        {arreglo[1]}
-                    </strong>
-               
-                    </div> 
+
+            <div>
+                <strong key={String(1)} style={{ fontWeight: 300 }}>
+                    {arreglo[0]}
+                </strong>
+                <span key={String(2)} style={{ fontWeight: 500 }}>
+                    {query}
+                </span>
+                <strong key={String(3)} style={{ fontWeight: 300 }}>
+                    {arreglo[1]}
+                </strong>
+
+            </div>
         </MenuItem>
     );
 }
@@ -189,9 +193,12 @@ class Autocomplete extends React.Component {
     };
 
     render() {
-        const { classes } = this.props;
+        const { classes,value} = this.props;
+      
+
 
         const autosuggestProps = {
+          
             renderInputComponent,
             suggestions: this.state.suggestions,
             onSuggestionsFetchRequested: this.handleSuggestionsFetchRequested,
@@ -207,8 +214,9 @@ class Autocomplete extends React.Component {
                     inputProps={{
                         classes,
                         placeholder: 'Nombre del cliente',
-                        value: this.state.single,
+                        value: value,
                         onChange: this.handleChange('single'),
+                       
                     }}
                     theme={{
                         container: classes.container,
@@ -229,6 +237,7 @@ class Autocomplete extends React.Component {
 
 Autocomplete.propTypes = {
     classes: PropTypes.object.isRequired,
+    defaultValue: PropTypes.string,
 };
 
 export default withStyles(styles)(Autocomplete);
