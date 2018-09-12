@@ -37,6 +37,9 @@ import IconButton from "@material-ui/core/IconButton";
 
 
 
+
+
+
 import { Link } from "react-router-dom";
 
 
@@ -78,9 +81,9 @@ function createData(idRastreo, cliente, telefono, direccionShort, direccion, des
     return { id: counter, idRastreo, cliente, direccionShort, telefono, direccion, descripcionShort, descripcion };
 }
 
-function createDataJson(id ,idRastreo, cliente, telefono, direccionShort, direccion, descripcionShort, descripcion) {
-   
-                return {id ,idRastreo, cliente, direccionShort, telefono, direccion, descripcionShort, descripcion };
+function createDataJson(id, idRastreo, cliente, telefono, direccionShort, direccion, descripcionShort, descripcion) {
+
+    return { id, idRastreo, cliente, direccionShort, telefono, direccion, descripcionShort, descripcion };
 }
 
 
@@ -110,7 +113,8 @@ class TableDynamic extends React.Component {
         nombreCliente: '',
         test: '00000',
         single: 'foo',
-        actualizarModal: false
+        actualizarModal: false,
+        refreshData: false
 
     };
 
@@ -184,6 +188,7 @@ class TableDynamic extends React.Component {
 
     handleModalOpen = () => {
         this.setState({ modalOpen: true });
+        this.setState({ dataModal: [{}], nombreCliente: '', idRastreo: '', telefono: '', direccion: '', descripcion: '' })
     };
 
     handleModalOpenSee = (event, n) => {
@@ -197,36 +202,52 @@ class TableDynamic extends React.Component {
     handleModalClose = () => {
         this.setState({ modalOpen: false });
 
+
     };
 
     handleModalCloseSave = () => {
-        this.setState({ modalOpen: false });
+        let data = []
+        this.setState({ modalOpen: false, refreshData: true });
         let d = new Date();
         let t = d.getTime();
-        this.setState({ data: [...this.state.data, createData(t.toString().substr(8, t.toString().lenght), this.state.nombreCliente, this.state.telefono, this.state.direccion.toString().substr(0, 10) + '...', this.state.direccion, this.state.descripcion.toString().substr(0, 10) + '...', this.state.descripcion, "")] });
+        if (this.state.nombreCliente != '' && this.state.telefono != '' && this.state.direccion != '' && this.state.descripcion != '') {
+            this.setState({ data: [...this.state.data, createData(t.toString().substr(8, t.toString().lenght), this.state.nombreCliente, this.state.telefono, this.state.direccion.toString().substr(0, 10) + '...', this.state.direccion, this.state.descripcion.toString().substr(0, 10) + '...', this.state.descripcion, "")] });
+            this.props.handleSaveTableJson([...this.state.data, createDataJson(t.toString().substr(8, t.toString().lenght), this.state.nombreCliente, this.state.telefono, this.state.direccion.toString().substr(0, 10) + '...', this.state.direccion, this.state.descripcion.toString().substr(0, 10) + '...', this.state.descripcion, "")])
+        }
+
     };
+
+ 
 
 
 
     handleModalCloseActualizar = () => {
-        counter = 0
-        this.setState({ modalOpen: false, actualizarModal:false });
-       
-        this.setState({ data: this.state.data.map(function(t){
-           if (t.id!=this.state.dataModal.id ){
-            return createDataJson(t.id, t.idRastreo, t.cliente, t.direccionShort, t.telefono, t.direccion, t.descripcionShort, t.descripcion)
-           }else{
-            return createDataJson(t.id, t.idRastreo, this.state.nombreCliente, this.state.telefono, this.state.direccion.toString().substr(0, 10) + '...', this.state.direccion, this.state.descripcion.toString().substr(0, 10) + '...', this.state.descripcion)
-           }
-        }.bind(this)) })
+        let data = []
+        this.setState({ modalOpen: false, actualizarModal: false, refreshData: true });
 
-   
-        
+        this.setState({
+            data: this.state.data.map(function (t) {
+                if (this.state.nombreCliente != '' && this.state.telefono != '' && this.state.direccion != '' && this.state.descripcion != '') {
+                    if (t.id != this.state.dataModal.id) {
+                        return createDataJson(t.id, t.idRastreo, t.cliente, t.direccionShort, t.telefono, t.direccion, t.descripcionShort, t.descripcion)
+                    } else {
+
+                        return createDataJson(t.id, t.idRastreo, this.state.nombreCliente, this.state.telefono, this.state.direccion.toString().substr(0, 10) + '...', this.state.direccion, this.state.descripcion.toString().substr(0, 10) + '...', this.state.descripcion)
+                    }
+                }
+            }.bind(this))
+        })
+
+
+
+
+
     };
 
     handleChangeInput = event => {
         this.setState({ [event.target.id]: event.target.value })
     };
+
 
 
 
@@ -237,10 +258,12 @@ class TableDynamic extends React.Component {
 
     isSelected = id => this.state.selected.indexOf(id) !== -1;
 
+
     render() {
         const { classes, title, colortable, rows, mostrarDatos } = this.props;
         const { order, orderBy, selected, rowsPerPage, page, open, openNotificacion, modalOpen } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, this.state.data.length - page * rowsPerPage);
+
 
         return (
 
@@ -396,7 +419,16 @@ class TableDynamic extends React.Component {
 
                                     ) :
                                         (
-                                            <div></div>
+                                            <TableRow>
+                                                <TableCell></TableCell>
+                                                <TableCell></TableCell>
+                                                <TableCell></TableCell>
+                                                <TableCell></TableCell>
+                                                <TableCell></TableCell>
+                                                <TableCell></TableCell>
+                                                <TableCell></TableCell>
+                                                <TableCell></TableCell>
+                                            </TableRow>
 
                                         )
                                 }

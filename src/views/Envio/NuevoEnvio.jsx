@@ -17,6 +17,8 @@ import avatar from "../../assets/img/faces/marc.jpg";
 import rappiAvatar from "../../assets/img/faces/rappi.png";
 import TableDynamic from "../../components/Table/TableDynamic";
 
+import { db } from '../../config/constants.jsx';
+
 
 const styles = {
   cardCategoryWhite: {
@@ -38,22 +40,22 @@ const styles = {
 };
 
 let counter = 0;
-function createData(          idRastreo, cliente,telefono, direccion, descripcion){
-        counter += 1;
-        return { id: counter, idRastreo, cliente,telefono, direccion, descripcion};
+function createData(idRastreo, cliente, telefono, direccion, descripcion) {
+  counter += 1;
+  return { id: counter, idRastreo, cliente, telefono, direccion, descripcion};
 }
 
-const data= [
-  createData('12312', 'Elmer Padilla','9898-9898','ciudad 1, colonia 1 casa 1','es un paquete de prueba',""),
+const data = [
+  createData('12312', 'Elmer Padilla', '9898-9898', 'ciudad 1, colonia 1 casa 1', 'es un paquete de prueba', ""),
 ]
 
-const mostrarDatos=[   
-  {campo : "idRastreo",enlace:false, pathname:""},
-  {campo : "cliente",enlace:false, pathname:" "},
-  {campo : "telefono",enlace:false, pathname:" "},
-  {campo : "direccionShort",enlace:false, pathname:" "},
-  {campo : "descripcionShort",enlace:false, pathname:" "} 
-  
+const mostrarDatos = [
+  { campo: "idRastreo", enlace: false, pathname: "" },
+  { campo: "cliente", enlace: false, pathname: " " },
+  { campo: "telefono", enlace: false, pathname: " " },
+  { campo: "direccionShort", enlace: false, pathname: " " },
+  { campo: "descripcionShort", enlace: false, pathname: " " }
+
 ]
 
 const rows = [
@@ -66,12 +68,20 @@ const rows = [
   { id: 'opcion', numeric: false, disablePadding: false, label: 'Opciones' },
 ];
 
+function createDataManifest(codigoEnvio, fechaCreacion, estado,move) {
+
+  return { codigoEnvio, fechaCreacion, estado,move };
+}
 
 class NuevoEnvio extends React.Component {
 
   state = {
     valor: {},
-    actualizar: false
+    actualizar: false,
+    data: [],
+    fechaCreacion: '',
+    codigoEnvio: '',
+    estado: ''
   }
 
   handleActualizar = () => {
@@ -81,43 +91,88 @@ class NuevoEnvio extends React.Component {
 
   }
 
+  handleSaveDataJson = (value) => {
+    this.setState({ data: value })
+
+  };
+
+  handleSaveDataJsonDB = () => {
+
+    const newMoves = db.collection("move");
+    const newManifest = db.collection("manifest").doc();
+
+ 
+
+    console.log(this.state.data)
+    let move=[]
+    this.state.data.map(function (x) {
+
+      
+      newMoves.add(x).then(function (docRef) {
+        
+        move.push(docRef.id)
+        console.log(move)
+
+        newManifest.set(createDataManifest(this.state.codigoEnvio, this.state.fechaCreacion, this.state.estado, move)).then(function (docRef) {
+          
+    
+        }.bind(this))
+          .catch(function (error) {
+            console.error("Error adding document: ", error);
+          })
+        
+      }.bind(this))
+        .catch(function (error) {
+          console.error("Error adding document: ", error);
+        })
+    }.bind(this))
+
+
+
+  };
+
+
+  handleChangeInput = event => {
+    this.setState({ [event.target.id]: event.target.value })
+  };
+
+
 
   render() {
-      
-    
 
     const { classes } = this.props;
 
     return (
       <div>
         <GridContainer>
-        
+
           <GridItem xs={12} sm={12} md={12}>
             <Card>
               {this.state.actualizar ?
                 <CardHeader color="success">
                   <h4 className={classes.cardTitleWhite}>Editando informacion del paquete</h4>
-                 
+
                 </CardHeader>
                 :
                 <CardHeader color="primary">
                   <h4 className={classes.cardTitleWhite}>Registro de un nuevo envio</h4>
-                 
+
                 </CardHeader>
               }
               <CardBody>
                 <GridContainer>
-                    
+
                   <GridItem xs={12} sm={12} md={4}>
                     <CustomInput
                       labelText="Codigo de Envio"
-                      id="usuario"
-                     
+                      id="codigoEnvio"
+
                       formControlProps={{
                         fullWidth: true
                       }}
                       inputProps={{
-                        disabled: this.state.actualizar
+                        disabled: this.state.actualizar,
+                        onChange: this.handleChangeInput
                       }}
 
                     />
@@ -125,11 +180,12 @@ class NuevoEnvio extends React.Component {
                   <GridItem xs={12} sm={12} md={4}>
                     <CustomInput
                       labelText="Estado"
-                      id="username"
+                      id="estado"
                       inputProps={{
-                        disabled: this.state.actualizar
+                        disabled: this.state.actualizar,
+                        onChange: this.handleChangeInput
                       }}
-                     
+
                       formControlProps={{
                         fullWidth: true
                       }}
@@ -137,12 +193,13 @@ class NuevoEnvio extends React.Component {
                   </GridItem>
                   <GridItem xs={12} sm={12} md={4}>
                     <CustomInput
-                      labelText="fecha"
-                      id="email"
+                      labelText="Fecha Creacion"
+                      id="fechaCreacion"
                       inputProps={{
-                        disabled: this.state.actualizar
+                        disabled: this.state.actualizar,
+                        onChange: this.handleChangeInput
                       }}
-                     
+
                       formControlProps={{
                         fullWidth: true
                       }}
@@ -151,25 +208,26 @@ class NuevoEnvio extends React.Component {
                 </GridContainer>
                 <GridContainer>
                   <GridItem xs={12} sm={12} md={12}>
-                  <TableDynamic
-                   title={"Lista de Usuarios"}
-                   colortable={"success"}
-                   data={data}
-                   rows={rows}
-                   mostrarDatos={mostrarDatos}
-                  />
-                    
+                    <TableDynamic
+                      title={"Lista de Usuarios"}
+                      colortable={"success"}
+                      data={data}
+                      rows={rows}
+                      mostrarDatos={mostrarDatos}
+                      handleSaveTableJson={this.handleSaveDataJson.bind(this)}
+                    />
+
                   </GridItem>
                 </GridContainer>
               </CardBody>
               <CardFooter>
                 {this.state.actualizar ?
                   <Button onClick={this.handleActualizar} color="success">Actualizar informacion</Button>
-                  : <Button onClick={this.handleActualizar} color="primary">Solicitar Entrega</Button>}
+                  : <Button onClick={this.handleSaveDataJsonDB} color="primary">Solicitar Entrega</Button>}
               </CardFooter>
             </Card>
           </GridItem>
-          
+
         </GridContainer>
       </div>
     );
