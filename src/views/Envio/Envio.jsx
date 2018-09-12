@@ -9,6 +9,7 @@ import TableUser from "../../components/TableUser/TableUser";
 import AlertDialog from "../../components/Alert/Alert";
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
+import { Link } from "react-router-dom";
 
 
 import { NavLink } from "react-router-dom";
@@ -107,12 +108,15 @@ class Envio extends React.Component {
                         />
                     </GridItem>
                 </GridContainer>
-                < NavLink to={"/nuevoEnvio"}
-                >
-                    <Button variant="fab" className={classes.button} color='primary'>
+               
+                <Link to={{ pathname: "/nuevoEnvio", state: { valor:'NA' }}} >
+                <Button variant="fab" className={classes.button} color='primary'>
                         <AddIcon />
                     </Button>
-                </NavLink>
+                
+                </Link>
+                   
+               
             </div>
         );
     }

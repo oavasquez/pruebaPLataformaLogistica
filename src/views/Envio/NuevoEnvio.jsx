@@ -42,11 +42,11 @@ const styles = {
 let counter = 0;
 function createData(idRastreo, cliente, telefono, direccion, descripcion) {
   counter += 1;
-  return { id: counter, idRastreo, cliente, telefono, direccion, descripcion};
+  return { id: counter, idRastreo, cliente, telefono, direccion, descripcion };
 }
 
-function createDataEnvios(id, idRastreo, cliente, telefono, direccion,direccionShort,descripcion, descripcionShort,idEnvios) {
-  return { id , idRastreo, cliente, telefono, direccion,direccionShort,  descripcion, descripcionShort,idEnvios};
+function createDataEnvios(id, idRastreo, cliente, telefono, direccion, direccionShort, descripcion, descripcionShort, idEnvios) {
+  return { id, idRastreo, cliente, telefono, direccion, direccionShort, descripcion, descripcionShort, idEnvios };
 }
 
 const data = [
@@ -72,9 +72,9 @@ const rows = [
   { id: 'opcion', numeric: false, disablePadding: false, label: 'Opciones' },
 ];
 
-function createDataManifest(codigoEnvio, fechaCreacion, estado,move) {
+function createDataManifest(codigoEnvio, fechaCreacion, estado, move) {
 
-  return { codigoEnvio, fechaCreacion, estado,move };
+  return { codigoEnvio, fechaCreacion, estado, move };
 }
 
 class NuevoEnvio extends React.Component {
@@ -86,42 +86,45 @@ class NuevoEnvio extends React.Component {
     fechaCreacion: '',
     codigoEnvio: '',
     estado: ''
+    
   }
 
-  componentDidMount(){
+  componentDidMount() {
     const { valor } = this.props.location.state
-
-    var docRef = db.collection("move")
-
-    valor.move.map(function(x){
-
-
-      docRef.doc(x).get().then(function(doc)  {
-        if (doc.exists) {
-            this.setState({data:[...this.state.data, createDataEnvios(doc.data().id, doc.data().idRastreo, doc.data().cliente, doc.data().telefono, doc.data().direccion,String(doc.data().direccion).substr(0,10), doc.data().descripcion,String(doc.data().descripcion).substr(0,10),doc.id)]})
     
+    if (valor !='NA') {
+
+      this.setState(state => ({
+        actualizar: !state.actualizar
+      }));
+
+
+      var docRef = db.collection("move")
+
+      valor.move.map(function (x) {
+
+
+        docRef.doc(x).get().then(function (doc) {
+          if (doc.exists) {
+            this.setState({ data: [...this.state.data, createDataEnvios(doc.data().id, doc.data().idRastreo, doc.data().cliente, doc.data().telefono, doc.data().direccion, String(doc.data().direccion).substr(0, 10), doc.data().descripcion, String(doc.data().descripcion).substr(0, 10), doc.id)] })
+
           } else {
             // doc.data() will be undefined in this case
             console.log("No such document!");
-        }
-    }.bind(this)).catch(function(error) {
-        console.log("Error getting document:", error);
-    }); 
+          }
+        }.bind(this)).catch(function (error) {
+          console.log("Error getting document:", error);
+        });
 
 
-    }.bind(this))
+      }.bind(this))
 
-
-   
-
-  
+    }
 
   }
 
   handleActualizar = () => {
-    this.setState(state => ({
-      actualizar: !state.actualizar
-    }));
+   
 
   }
 
@@ -136,21 +139,21 @@ class NuevoEnvio extends React.Component {
     const newManifest = db.collection("manifest").doc();
 
 
-    let moves=[]
+    let moves = []
     this.state.data.map(function (x) {
 
-      
+
       newMoves.add(x).then(function (docRef) {
-        
+
         moves.push(docRef.id)
 
         newManifest.set(createDataManifest(this.state.codigoEnvio, this.state.fechaCreacion, this.state.estado, moves)).then(function (docRef) {
-          
+
         }.bind(this))
           .catch(function (error) {
             console.error("Error adding document: ", error);
           })
-        
+
       }.bind(this))
         .catch(function (error) {
           console.error("Error adding document: ", error);
@@ -170,7 +173,7 @@ class NuevoEnvio extends React.Component {
 
   render() {
     const { valor } = this.props.location.state
-    
+
 
     const { classes } = this.props;
 
@@ -233,7 +236,7 @@ class NuevoEnvio extends React.Component {
                         disabled: this.state.actualizar,
                         onChange: this.handleChangeInput
                       }}
-                      
+
                       defaultValue={valor.fechaElaboracion}
                       formControlProps={{
                         fullWidth: true
