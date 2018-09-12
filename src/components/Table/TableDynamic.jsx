@@ -332,7 +332,7 @@ class TableDynamic extends React.Component {
                                                                     </TableCell>
                                                                 )
                                                                     : (
-                                                                        <TableCell className={classes.TableRow} >{n[x.campo]}</TableCell>)
+                                                                        <TableCell zeroMinWidth className={classes.TableRow} >{n[x.campo]}</TableCell>)
                                                             )
 
                                                         })}
