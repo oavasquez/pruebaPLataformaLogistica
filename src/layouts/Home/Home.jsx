@@ -54,7 +54,7 @@ const styles = theme => ({
     Paddingbottom: "0",
   },
   content:{
-    paddingTop: 40,
+    paddingTop: 70,
 
   },
   progress: {

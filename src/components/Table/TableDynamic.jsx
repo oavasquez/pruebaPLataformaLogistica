@@ -26,6 +26,7 @@ import ModalFormulario from '../Modal/Modal';
 import Delete from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
+import SeeIcon from '@material-ui/icons/RemoveRedEye';
 
 
 import CustomInput from "../CustomInput/CustomInput.jsx";
@@ -72,17 +73,22 @@ const styles = theme => ({
 
 });
 let counter = 0;
-function createData(idRastreo, cliente, telefono, direccion, descripcion) {
+function createData(idRastreo, cliente, telefono, direccionShort, direccion, descripcionShort, descripcion) {
     counter += 1;
-    return { id: counter, idRastreo, cliente, telefono, direccion, descripcion };
+    return { id: counter, idRastreo, cliente, direccionShort, telefono, direccion, descripcionShort, descripcion };
+}
+
+function createDataJson(id ,idRastreo, cliente, telefono, direccionShort, direccion, descripcionShort, descripcion) {
+   
+                return {id ,idRastreo, cliente, direccionShort, telefono, direccion, descripcionShort, descripcion };
 }
 
 
 
 class TableDynamic extends React.Component {
 
-    
-    
+
+
 
     state = {
         open: false,
@@ -94,19 +100,21 @@ class TableDynamic extends React.Component {
         valorBuscar: 0,
         filtrar: false,
         data: [],
+        dataModal: {},
         page: 0,
         rowsPerPage: 3,
         modalOpen: false,
         telefono: '',
         descripcion: '',
         direccion: '',
-        nombreCliente: ''
+        nombreCliente: '',
+        test: '00000',
+        single: 'foo',
+        actualizarModal: false
 
     };
 
-    handleSetNombre = (values) => {
-        this.setState({ nombreCliente: values })
-    }
+
 
     handleRequestSort = (event, property) => {
         const orderBy = property;
@@ -178,6 +186,14 @@ class TableDynamic extends React.Component {
         this.setState({ modalOpen: true });
     };
 
+    handleModalOpenSee = (event, n) => {
+        this.setState({ modalOpen: true, dataModal: n, nombreCliente: n.cliente, actualizarModal: true });
+
+
+
+
+    };
+
     handleModalClose = () => {
         this.setState({ modalOpen: false });
 
@@ -186,8 +202,26 @@ class TableDynamic extends React.Component {
     handleModalCloseSave = () => {
         this.setState({ modalOpen: false });
         let d = new Date();
-        let t= d.getTime();
-        this.setState({ data: [...this.state.data, createData(t.toString().substr(8, t.toString().lenght), this.state.nombreCliente, this.state.telefono, this.state.direccion, this.state.descripcion, "")] });
+        let t = d.getTime();
+        this.setState({ data: [...this.state.data, createData(t.toString().substr(8, t.toString().lenght), this.state.nombreCliente, this.state.telefono, this.state.direccion.toString().substr(0, 10) + '...', this.state.direccion, this.state.descripcion.toString().substr(0, 10) + '...', this.state.descripcion, "")] });
+    };
+
+
+
+    handleModalCloseActualizar = () => {
+        counter = 0
+        this.setState({ modalOpen: false, actualizarModal:false });
+       
+        this.setState({ data: this.state.data.map(function(t){
+           if (t.id!=this.state.dataModal.id ){
+            return createDataJson(t.id, t.idRastreo, t.cliente, t.direccionShort, t.telefono, t.direccion, t.descripcionShort, t.descripcion)
+           }else{
+            return createDataJson(t.id, t.idRastreo, this.state.nombreCliente, this.state.telefono, this.state.direccion.toString().substr(0, 10) + '...', this.state.direccion, this.state.descripcion.toString().substr(0, 10) + '...', this.state.descripcion)
+           }
+        }.bind(this)) })
+
+   
+        
     };
 
     handleChangeInput = event => {
@@ -195,6 +229,10 @@ class TableDynamic extends React.Component {
     };
 
 
+
+    handleSetNombre = (values) => {
+        this.setState({ nombreCliente: values })
+    }
 
 
     isSelected = id => this.state.selected.indexOf(id) !== -1;
@@ -217,6 +255,7 @@ class TableDynamic extends React.Component {
                         <GridItem xs={12} sm={12} md={12}>
                             <AutoComplete
                                 seleccionNombre={this.handleSetNombre}
+                                value={this.state.nombreCliente}
                             />
                         </GridItem>
 
@@ -229,6 +268,7 @@ class TableDynamic extends React.Component {
                                     disabled: this.state.actualizar,
                                     onChange: this.handleChangeInput
                                 }}
+                                defaultValue={this.state.dataModal.telefono}
 
                                 formControlProps={{
                                     fullWidth: true
@@ -241,9 +281,10 @@ class TableDynamic extends React.Component {
                                 id="direccion"
                                 inputProps={{
                                     disabled: this.state.actualizar,
-                                    onChange: this.handleChangeInput
+                                    onChange: this.handleChangeInput,
+                                    multiline: true
                                 }}
-
+                                defaultValue={this.state.dataModal.direccion}
                                 formControlProps={{
                                     fullWidth: true
                                 }}
@@ -255,9 +296,10 @@ class TableDynamic extends React.Component {
                                 id="descripcion"
                                 inputProps={{
                                     disabled: this.state.actualizar,
-                                    onChange: this.handleChangeInput
+                                    onChange: this.handleChangeInput,
+                                    multiline: true
                                 }}
-
+                                defaultValue={this.state.dataModal.descripcion}
                                 formControlProps={{
                                     fullWidth: true
                                 }}
@@ -265,10 +307,17 @@ class TableDynamic extends React.Component {
                         </GridItem>
                     </GridContainer>
                     <GridContainer spacing={8}>
-                        <GridItem xs={12} sm={12} md={2}>
-                            <Button onClick={this.handleModalCloseSave}>Guardar</Button>
-                        </GridItem>
-                        <GridItem xs={12} sm={12} md={2}>
+                        {this.state.actualizarModal ? (
+                            <GridItem xs={12} sm={12} md={4}>
+                                <Button onClick={this.handleModalCloseActualizar}>Actualizar</Button>
+                            </GridItem>) :
+                            (
+                                <GridItem xs={12} sm={12} md={4}>
+                                    <Button onClick={this.handleModalCloseSave}>Guardar</Button>
+                                </GridItem>
+                            )
+                        }
+                        <GridItem xs={12} sm={12} md={4}>
                             <Button onClick={this.handleModalClose} >Cancelar</Button>
                         </GridItem>
                     </GridContainer>
@@ -332,13 +381,13 @@ class TableDynamic extends React.Component {
                                                                     </TableCell>
                                                                 )
                                                                     : (
-                                                                        <TableCell zeroMinWidth className={classes.TableRow} >{n[x.campo]}</TableCell>)
+                                                                        <TableCell className={classes.TableRow} key={x.campo} >{n[x.campo]}</TableCell>)
                                                             )
 
                                                         })}
                                                         <TableCell>
-                                                            <IconButton variant="fab" color='primary' aria-label="Add" >
-                                                                <EditIcon />
+                                                            <IconButton variant="fab" color='primary' aria-label="Add" onClick={event => this.handleModalOpenSee(event, n)} >
+                                                                <SeeIcon />
                                                             </IconButton>
                                                         </TableCell>
                                                     </TableRow>
@@ -347,7 +396,7 @@ class TableDynamic extends React.Component {
 
                                     ) :
                                         (
-                                           <div></div>
+                                            <div></div>
 
                                         )
                                 }
