@@ -15,7 +15,7 @@ import CardFooter from "../../components/Card/CardFooter.jsx";
 
 import avatar from "../../assets/img/faces/marc.jpg";
 import rappiAvatar from "../../assets/img/faces/rappi.png";
-import TableDynamic from "../../components/Table/TableDynamic";
+import Tableview from "../../components/Table/Tableview";
 
 import { db } from '../../config/constants.jsx';
 
@@ -39,19 +39,20 @@ const styles = {
   }
 };
 
-let counter = 0;
+
 function createData(idRastreo, cliente, telefono, direccion, descripcion) {
+ 
+  return { id: counter, idRastreo, cliente, telefono, direccion, descripcion };
+}
+
+let counter = 0;
+
+function createDataEnvios(idRastreo, cliente, telefono, direccion, direccionShort, descripcion, descripcionShort, idEnvios) {
   counter += 1;
-  return {idRastreo, cliente, telefono, direccion, descripcion };
+  return { id:counter, idRastreo, cliente, telefono, direccion, direccionShort, descripcion, descripcionShort, idEnvios };
 }
 
-function createDataEnvios( idRastreo, cliente, telefono, direccion, direccionShort, descripcion, descripcionShort, idEnvios) {
-  return { idRastreo, cliente, telefono, direccion, direccionShort, descripcion, descripcionShort, idEnvios };
-}
 
-const data = [
-  createData('12312', 'Elmer Padilla', '9898-9898', 'ciudad 1, colonia 1 casa 1', 'es un paquete de prueba', ""),
-]
 
 const mostrarDatos = [
   { campo: "idRastreo", enlace: false, pathname: "" },
@@ -77,7 +78,12 @@ function createDataManifest(codigoEnvio, fechaCreacion, estado, move) {
   return { codigoEnvio, fechaCreacion, estado, move };
 }
 
-class NuevoEnvio extends React.Component {
+function createDataJson(idRastreo, cliente, telefono, direccionShort, direccion, descripcionShort, descripcion) {
+  counter += 1;
+  return { id:counter, idRastreo, cliente, direccionShort, telefono, direccion, descripcionShort, descripcion };
+}
+
+class VerEnvio extends React.Component {
 
   state = {
     valor: {},
@@ -106,8 +112,8 @@ class NuevoEnvio extends React.Component {
 
         docRef.doc(x).get().then(function (doc) {
           if (doc.exists) {
-            this.setState({ data: [...this.state.data, createDataEnvios(doc.data().id, doc.data().idRastreo, doc.data().cliente, doc.data().telefono, doc.data().direccion, String(doc.data().direccion).substr(0, 10), doc.data().descripcion, String(doc.data().descripcion).substr(0, 10), doc.id)] })
-
+            this.setState({ data: [...this.state.data, createDataEnvios(doc.data().idRastreo, doc.data().cliente, doc.data().telefono, doc.data().direccion, String(doc.data().direccion).substr(0, 10), doc.data().descripcion, String(doc.data().descripcion).substr(0, 10), doc.id)] })
+            console.log(doc.data())
           } else {
             // doc.data() will be undefined in this case
             console.log("No such document!");
@@ -124,26 +130,89 @@ class NuevoEnvio extends React.Component {
   }
 
   handleActualizar = () => {
+
+
+    const newMoves = db.collection("move").doc();
+    const newManifest = db.collection("manifest").doc();
+
+
+    let moves = []
+    this.state.data.map(function (x) {
+
+
+      newMoves.set(x).then(function (docRef) {
+
+        moves.push(docRef.id)
+
+        newManifest.set(createDataManifest(this.state.codigoEnvio, this.state.fechaCreacion, this.state.estado, moves)).then(function (docRef) {
+
+        }.bind(this))
+          .catch(function (error) {
+            console.error("Error adding document: ", error);
+          })
+
+      }.bind(this))
+        .catch(function (error) {
+          console.error("Error adding document: ", error);
+        })
+    }.bind(this))
+
+      
+      
    
 
   }
 
   handleSaveDataJson = (value) => {
-    console.log(value)
-    this.setState({ data: value })
+    
+
+
+    this.setState({ data: [...this.state.data, createDataJson(value.idRastreo, value.cliente, value.telefono,value.direccionShort,value.direccion, value.descripcionShort, value.descripcion)] });
+
+    
+    
 
   };
 
+  handleUpdateDataJson=(value)=>{
+
+    counter=0;  
+
+    console.log(value)
+    
+    this.setState({
+      data: this.state.data.map(function (t) {
+              if (t.idRastreo!= value.idRastreo) {
+                  return createDataJson(t.idRastreo, t.cliente, t.telefono,t.direccionShort,t.direccion, t.descripcionShort, t.descripcion)
+              } else {
+
+                  return createDataJson(t.idRastreo, value.cliente, value.telefono, value.direccionShort,value.direccion, value.descripcionShort,value.descripcion)
+              
+          }
+
+        })})
+
+    
+    
+    
+  }
+
+
+
+
+
+
+ 
+
   handleSaveDataJsonDB = () => {
 
-    console.log(this.state.data)
     const newMoves = db.collection("move");
     const newManifest = db.collection("manifest").doc();
 
 
     let moves = []
     this.state.data.map(function (x) {
-      console.log(x)
+
 
       newMoves.add(x).then(function (docRef) {
 
@@ -208,7 +277,7 @@ class NuevoEnvio extends React.Component {
                         fullWidth: true
                       }}
                       inputProps={{
-                        disabled: this.state.actualizar,
+                        disabled: !this.state.actualizar,
                         onChange: this.handleChangeInput
                       }}
                       defaultValue={valor.id}
@@ -220,7 +289,7 @@ class NuevoEnvio extends React.Component {
                       labelText="Estado"
                       id="estado"
                       inputProps={{
-                        disabled: this.state.actualizar,
+                        disabled: !this.state.actualizar,
                         onChange: this.handleChangeInput
                       }}
                       defaultValue={valor.estadoEnvio}
@@ -235,7 +304,7 @@ class NuevoEnvio extends React.Component {
                       labelText="Fecha Creacion"
                       id="fechaCreacion"
                       inputProps={{
-                        disabled: this.state.actualizar,
+                        disabled: !this.state.actualizar,
                         onChange: this.handleChangeInput
                       }}
 
@@ -248,13 +317,14 @@ class NuevoEnvio extends React.Component {
                 </GridContainer>
                 <GridContainer>
                   <GridItem xs={12} sm={12} md={12}>
-                    <TableDynamic
+                    <Tableview
                       title={"Lista de Usuarios"}
                       colortable={"success"}
                       data={this.state.data}
                       rows={rows}
                       mostrarDatos={mostrarDatos}
                       handleSaveTableJson={this.handleSaveDataJson.bind(this)}
+                      handleUpdateTableJson={this.handleUpdateDataJson.bind(this)}
                     />
 
                   </GridItem>
@@ -274,4 +344,4 @@ class NuevoEnvio extends React.Component {
   }
 }
 
-export default withStyles(styles)(NuevoEnvio);
+export default withStyles(styles)(VerEnvio);

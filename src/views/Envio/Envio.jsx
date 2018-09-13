@@ -23,7 +23,7 @@ function createDataEnvio(idEnvio ,id, fechaElaboracion, estadoEnvio, move) {
 
 
 const mostrarDatos = [
-    { campo: "id", enlace: true, pathname: "/nuevoEnvio" },
+    { campo: "id", enlace: true, pathname: "/VerEnvio" },
     { campo: "fechaElaboracion", enlace: false, pathname: " " },
     { campo: "estadoEnvio", enlace: false, pathname: " " },
    

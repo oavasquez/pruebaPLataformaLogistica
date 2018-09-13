@@ -13,11 +13,11 @@ import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 
-import GridItem from "../Grid/GridItem.jsx";
-import GridContainer from "../Grid/GridContainer.jsx";
-import Card from "../Card/Card.jsx";
-import CardHeader from "../Card/CardHeader.jsx";
-import CardBody from "../Card/CardBody.jsx";
+import GridItem from "../Grid/GridItem";
+import GridContainer from "../Grid/GridContainer";
+import Card from "../Card/Card";
+import CardHeader from "../Card/CardHeader";
+import CardBody from "../Card/CardBody";
 import AlertDialog from '../Alert/Alert';
 import EnhancedTableToolbar from '../TableToolbar/EnhancedTableToolbar';
 import EnhancedTableHead from '../TableHead/EnhancedTableHead';
@@ -29,11 +29,14 @@ import EditIcon from '@material-ui/icons/Edit';
 import SeeIcon from '@material-ui/icons/RemoveRedEye';
 
 
-import CustomInput from "../CustomInput/CustomInput.jsx";
+import CustomInput from "../CustomInput/CustomInput";
 
 import AutoComplete from '../Autocomplete/Autocomplete'
 
 import IconButton from "@material-ui/core/IconButton";
+
+
+
 
 
 
@@ -72,20 +75,26 @@ const styles = theme => ({
     }
 
 });
-let counter = 0;
+
 function createData(idRastreo, cliente, telefono, direccionShort, direccion, descripcionShort, descripcion) {
-    counter += 1;
-    return { id: counter, idRastreo, cliente, telefono, direccionShort, direccion, descripcionShort, descripcion };
+  
+    return { idRastreo, cliente, telefono, direccionShort, direccion, descripcionShort, descripcion };
 }
 
-function createDataJson(id ,idRastreo, cliente, telefono, direccionShort, direccion, descripcionShort, descripcion) {
-   
-                return {id ,idRastreo, cliente, telefono,direccionShort , direccion, descripcionShort, descripcion };
+function createDataJson(idRastreo, cliente, telefono, direccionShort, direccion, descripcionShort, descripcion) {
+
+    return {idRastreo, cliente,  telefono, direccionShort, direccion, descripcionShort, descripcion };
 }
+
 
 
 
 class TableDynamic extends React.Component {
+
+    constructor(props) {
+        super(props)
+
+    }
 
 
 
@@ -102,7 +111,7 @@ class TableDynamic extends React.Component {
         data: [],
         dataModal: {},
         page: 0,
-        rowsPerPage: 3,
+        rowsPerPage:5,
         modalOpen: false,
         telefono: '',
         descripcion: '',
@@ -110,7 +119,8 @@ class TableDynamic extends React.Component {
         nombreCliente: '',
         test: '00000',
         single: 'foo',
-        actualizarModal: false
+        actualizarModal: false,
+        refreshData: false
 
     };
 
@@ -184,10 +194,19 @@ class TableDynamic extends React.Component {
 
     handleModalOpen = () => {
         this.setState({ modalOpen: true });
+        this.setState({ dataModal: [{}], nombreCliente: '', idRastreo: '', telefono: '', direccion: '', descripcion: '' })
     };
 
     handleModalOpenSee = (event, n) => {
-        this.setState({ modalOpen: true, dataModal: n, nombreCliente: n.cliente, actualizarModal: true });
+        console.log(n)
+        this.setState({ 
+            modalOpen: true, 
+            dataModal: n, 
+            nombreCliente: n.cliente, 
+            telefono: n.telefono,
+            descripcion: n.descripcion,
+            direccion: n.direccion,
+            actualizarModal: true });
 
 
 
@@ -197,41 +216,50 @@ class TableDynamic extends React.Component {
     handleModalClose = () => {
         this.setState({ modalOpen: false });
 
+
     };
 
     handleModalCloseSave = () => {
-        let data = []
-        this.setState({ modalOpen: false, refreshData: true });
+
+        this.setState({ modalOpen: false });
         let d = new Date();
         let t = d.getTime();
         if (this.state.nombreCliente != '' && this.state.telefono != '' && this.state.direccion != '' && this.state.descripcion != '') {
-            this.setState({ data: [...this.state.data, createData(t.toString().substr(8, t.toString().lenght), this.state.nombreCliente, this.state.telefono, this.state.direccion.toString().substr(0, 10) + '...', this.state.direccion, this.state.descripcion.toString().substr(0, 10) + '...', this.state.descripcion, "")] });
-            this.props.handleSaveTableJson([...this.state.data, createDataJson(counter,t.toString().substr(8, t.toString().lenght), this.state.nombreCliente, this.state.telefono, this.state.direccion.toString().substr(0, 10) + '...', this.state.direccion, this.state.descripcion.toString().substr(0, 10) + '...', this.state.descripcion, "")])
-        }
+            this.props.handleSaveTableJson(createDataJson(t.toString().substr(8, t.toString().length), this.state.nombreCliente, this.state.telefono, this.state.direccion.toString().substr(0, 10) + '...', this.state.direccion, this.state.descripcion.toString().substr(0, 10) + '...', this.state.descripcion, ""))
+       }
+
 
     };
+
+
 
 
 
     handleModalCloseActualizar = () => {
-        counter = 0
-        this.setState({ modalOpen: false, actualizarModal:false });
-       
-        this.setState({ data: this.state.data.map(function(t){
-           if (t.id!=this.state.dataModal.id ){
-            return createDataJson(t.id, t.idRastreo, t.cliente, t.direccionShort, t.telefono, t.direccion, t.descripcionShort, t.descripcion)
-           }else{
-            return createDataJson(t.id, t.idRastreo, this.state.nombreCliente, this.state.telefono, this.state.direccion.toString().substr(0, 10) + '...', this.state.direccion, this.state.descripcion.toString().substr(0, 10) + '...', this.state.descripcion)
-           }
-        }.bind(this)) })
-
-   
+        this.setState({ modalOpen: false, actualizarModal: false, refreshData: true });
         
+
+        if (this.state.nombreCliente != '' && this.state.telefono != '' && this.state.direccion != '' && this.state.descripcion != '') {
+
+
+            this.props.handleUpdateTableJson(createDataJson(
+                this.state.dataModal.idRastreo, 
+                this.state.nombreCliente, 
+                this.state.telefono, 
+                this.state.direccion.toString().substr(0, 10) + '...', 
+                this.state.direccion, 
+                this.state.descripcion.toString().substr(0, 10) + '...', 
+                this.state.descripcion))
+
+        }
+
     };
 
     handleChangeInput = event => {
         this.setState({ [event.target.id]: event.target.value })
+
     };
+
 
 
 
@@ -242,10 +270,21 @@ class TableDynamic extends React.Component {
 
     isSelected = id => this.state.selected.indexOf(id) !== -1;
 
+
+    componentDidMount() {
+        const { data } = this.props;
+
+
+
+    }
+
+
     render() {
-        const { classes, title, colortable, rows, mostrarDatos } = this.props;
+        const { classes, title, colortable, rows, mostrarDatos, data } = this.props;
         const { order, orderBy, selected, rowsPerPage, page, open, openNotificacion, modalOpen } = this.state;
-        const emptyRows = rowsPerPage - Math.min(rowsPerPage, this.state.data.length - page * rowsPerPage);
+
+        const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+
 
         return (
 
@@ -273,7 +312,7 @@ class TableDynamic extends React.Component {
                                     disabled: this.state.actualizar,
                                     onChange: this.handleChangeInput
                                 }}
-                                defaultValue={this.state.dataModal.telefono}
+                                defaultValue={this.state.telefono}
 
                                 formControlProps={{
                                     fullWidth: true
@@ -289,7 +328,7 @@ class TableDynamic extends React.Component {
                                     onChange: this.handleChangeInput,
                                     multiline: true
                                 }}
-                                defaultValue={this.state.dataModal.direccion}
+                                defaultValue={this.state.direccion}
                                 formControlProps={{
                                     fullWidth: true
                                 }}
@@ -304,7 +343,7 @@ class TableDynamic extends React.Component {
                                     onChange: this.handleChangeInput,
                                     multiline: true
                                 }}
-                                defaultValue={this.state.dataModal.descripcion}
+                                defaultValue={this.state.descripcion}
                                 formControlProps={{
                                     fullWidth: true
                                 }}
@@ -340,22 +379,21 @@ class TableDynamic extends React.Component {
                                 orderBy={orderBy}
                                 onSelectAllClick={this.handleSelectAllClick}
                                 onRequestSort={this.handleRequestSort}
-                                rowCount={this.state.data.length}
+                                rowCount={data.length}
                             />
                             <TableBody>
                                 {
 
-                                    this.state.data.length > 0 ? (
+                                    data.length > 0 ? (
 
 
-                                        this.state.data
-                                            .filter(
-                                                this.state.filtrar ?
-                                                    (function (x) {
-                                                        return String(x[this.state.columnaNombre]).toLowerCase().indexOf(this.state.valorBuscar.toLowerCase()) > -1;
-                                                    }.bind(this)) : (
-                                                        x => x
-                                                    ))
+                                        data.filter(
+                                            this.state.filtrar ?
+                                                (function (x) {
+                                                    return String(x[this.state.columnaNombre]).toLowerCase().indexOf(this.state.valorBuscar.toLowerCase()) > -1;
+                                                }.bind(this)) : (
+                                                    x => x
+                                                ))
                                             .sort(getSorting(order, orderBy))
                                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                             .map(n => {
@@ -401,7 +439,16 @@ class TableDynamic extends React.Component {
 
                                     ) :
                                         (
-                                            <div></div>
+                                            <TableRow>
+                                                <TableCell></TableCell>
+                                                <TableCell></TableCell>
+                                                <TableCell></TableCell>
+                                                <TableCell></TableCell>
+                                                <TableCell></TableCell>
+                                                <TableCell></TableCell>
+                                                <TableCell></TableCell>
+                                                <TableCell></TableCell>
+                                            </TableRow>
 
                                         )
                                 }
@@ -435,7 +482,7 @@ class TableDynamic extends React.Component {
                     </div>
                     <TablePagination
                         component="div"
-                        count={this.state.data.length}
+                        count={data.length}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         backIconButtonProps={{

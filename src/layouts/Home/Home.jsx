@@ -35,6 +35,7 @@ import Menu from '@material-ui/core/Menu';
 
 import dashboardRoutes from "../../routes/dashboard.jsx";
 import NuevoEnvio from '../../views/Envio/NuevoEnvio';
+import VerEnvio from '../../views/Envio/VerEnvio';
 
 
 
@@ -370,6 +371,11 @@ class App extends Component {
                     authed={this.state.authed}
                     path="/nuevoEnvio"
                     component={NuevoEnvio}
+                  />
+                    <PrivateRoute
+                    authed={this.state.authed}
+                    path="/verEnvio"
+                    component={VerEnvio}
                   />
                   <PrivateRoute
                     authed={this.state.authed}
