@@ -18,6 +18,7 @@ import rappiAvatar from "../../assets/img/faces/rappi.png";
 import TableDynamic from "../../components/Table/TableDynamic";
 
 import { db } from '../../config/constants.jsx';
+import { Redirect } from 'react-router-dom';
 
 
 const styles = {
@@ -42,10 +43,10 @@ const styles = {
 let counter = 0;
 function createData(idRastreo, cliente, telefono, direccion, descripcion) {
   counter += 1;
-  return {idRastreo, cliente, telefono, direccion, descripcion };
+  return { idRastreo, cliente, telefono, direccion, descripcion };
 }
 
-function createDataEnvios( idRastreo, cliente, telefono, direccion, direccionShort, descripcion, descripcionShort, idEnvios) {
+function createDataEnvios(idRastreo, cliente, telefono, direccion, direccionShort, descripcion, descripcionShort, idEnvios) {
   return { idRastreo, cliente, telefono, direccion, direccionShort, descripcion, descripcionShort, idEnvios };
 }
 
@@ -85,14 +86,15 @@ class NuevoEnvio extends React.Component {
     data: [],
     fechaCreacion: '',
     codigoEnvio: '',
-    estado: ''
-    
+    estado: '',
+    toEnvios:false
+
   }
 
   componentDidMount() {
     const { valor } = this.props.location.state
     console.log(valor)
-    if (valor !='NA') {
+    if (valor != 'NA') {
 
       this.setState(state => ({
         actualizar: !state.actualizar
@@ -124,7 +126,7 @@ class NuevoEnvio extends React.Component {
   }
 
   handleActualizar = () => {
-   
+
 
   }
 
@@ -135,6 +137,8 @@ class NuevoEnvio extends React.Component {
   };
 
   handleSaveDataJsonDB = () => {
+
+    
 
     console.log(this.state.data)
     const newMoves = db.collection("move");
@@ -162,7 +166,9 @@ class NuevoEnvio extends React.Component {
         })
     }.bind(this))
 
-
+    this.setState(() => ({
+      toEnvios: true
+    }))
 
   };
 
@@ -178,6 +184,11 @@ class NuevoEnvio extends React.Component {
 
 
     const { classes } = this.props;
+
+
+    if (this.state.toEnvios === true) {
+      return <Redirect to='/envios' />
+    }
 
     return (
       <div>

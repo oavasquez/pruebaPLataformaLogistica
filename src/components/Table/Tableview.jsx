@@ -81,9 +81,9 @@ function createData(idRastreo, cliente, telefono, direccionShort, direccion, des
     return { idRastreo, cliente, telefono, direccionShort, direccion, descripcionShort, descripcion };
 }
 
-function createDataJson(idRastreo, cliente, telefono, direccionShort, direccion, descripcionShort, descripcion) {
+function createDataJson(idRastreo, cliente, telefono, direccionShort, direccion, descripcionShort, descripcion,idEnvios) {
 
-    return {idRastreo, cliente,  telefono, direccionShort, direccion, descripcionShort, descripcion };
+    return {idRastreo, cliente,  telefono, direccionShort, direccion, descripcionShort, descripcion,idEnvios };
 }
 
 
@@ -221,11 +221,12 @@ class TableDynamic extends React.Component {
 
     handleModalCloseSave = () => {
 
+        console.log(this.state.dataModal.id)
         this.setState({ modalOpen: false });
         let d = new Date();
         let t = d.getTime();
         if (this.state.nombreCliente != '' && this.state.telefono != '' && this.state.direccion != '' && this.state.descripcion != '') {
-            this.props.handleSaveTableJson(createDataJson(t.toString().substr(8, t.toString().length), this.state.nombreCliente, this.state.telefono, this.state.direccion.toString().substr(0, 10) + '...', this.state.direccion, this.state.descripcion.toString().substr(0, 10) + '...', this.state.descripcion, ""))
+            this.props.handleSaveTableJson(createDataJson(t.toString().substr(8, t.toString().length), this.state.nombreCliente, this.state.telefono, this.state.direccion.toString().substr(0, 10) + '...', this.state.direccion, this.state.descripcion.toString().substr(0, 10) + '...', this.state.descripcion, this.state.dataModal.idEnvios))
        }
 
 
@@ -249,7 +250,9 @@ class TableDynamic extends React.Component {
                 this.state.direccion.toString().substr(0, 10) + '...', 
                 this.state.direccion, 
                 this.state.descripcion.toString().substr(0, 10) + '...', 
-                this.state.descripcion))
+                this.state.descripcion,
+                this.state.dataModal.idEnvios
+                ))
 
         }
 
@@ -284,7 +287,7 @@ class TableDynamic extends React.Component {
         const { order, orderBy, selected, rowsPerPage, page, open, openNotificacion, modalOpen } = this.state;
 
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
-
+       
 
         return (
 

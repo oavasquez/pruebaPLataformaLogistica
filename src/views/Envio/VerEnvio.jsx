@@ -18,6 +18,7 @@ import rappiAvatar from "../../assets/img/faces/rappi.png";
 import Tableview from "../../components/Table/Tableview";
 
 import { db } from '../../config/constants.jsx';
+import { Redirect } from 'react-router-dom';
 
 
 const styles = {
@@ -41,16 +42,23 @@ const styles = {
 
 
 function createData(idRastreo, cliente, telefono, direccion, descripcion) {
- 
+
   return { id: counter, idRastreo, cliente, telefono, direccion, descripcion };
 }
 
 let counter = 0;
 
-function createDataEnvios(idRastreo, cliente, telefono, direccion, direccionShort, descripcion, descripcionShort, idEnvios) {
+function createDataEnviosId(idRastreo, cliente, telefono, direccion, direccionShort, descripcion, descripcionShort, idEnvios) {
   counter += 1;
-  return { id:counter, idRastreo, cliente, telefono, direccion, direccionShort, descripcion, descripcionShort, idEnvios };
+  return { id: counter, idRastreo, cliente, telefono, direccion, direccionShort, descripcion, descripcionShort, idEnvios };
 }
+
+function createDataEnvios(idRastreo, cliente, telefono, direccion, direccionShort, descripcion, descripcionShort) {
+
+  return { idRastreo, cliente, telefono, direccion, direccionShort, descripcion, descripcionShort};
+}
+
+
 
 
 
@@ -78,12 +86,14 @@ function createDataManifest(codigoEnvio, fechaCreacion, estado, move) {
   return { codigoEnvio, fechaCreacion, estado, move };
 }
 
-function createDataJson(idRastreo, cliente, telefono, direccionShort, direccion, descripcionShort, descripcion) {
+function createDataJson(idRastreo, cliente, telefono, direccionShort, direccion, descripcionShort, descripcion, idEnvios) {
   counter += 1;
-  return { id:counter, idRastreo, cliente, direccionShort, telefono, direccion, descripcionShort, descripcion };
+  return { id: counter, idRastreo, cliente, direccionShort, telefono, direccion, descripcionShort, descripcion, idEnvios };
 }
 
 class VerEnvio extends React.Component {
+
+  
 
   state = {
     valor: {},
@@ -92,13 +102,18 @@ class VerEnvio extends React.Component {
     fechaCreacion: '',
     codigoEnvio: '',
     estado: ''
-    
+
   }
 
   componentDidMount() {
+    counter=0;
+
     const { valor } = this.props.location.state
     console.log(valor)
-    if (valor !='NA') {
+    if (valor != 'NA') {
+
+
+      this.setState({ valor: valor })
 
       this.setState(state => ({
         actualizar: !state.actualizar
@@ -112,7 +127,7 @@ class VerEnvio extends React.Component {
 
         docRef.doc(x).get().then(function (doc) {
           if (doc.exists) {
-            this.setState({ data: [...this.state.data, createDataEnvios(doc.data().idRastreo, doc.data().cliente, doc.data().telefono, doc.data().direccion, String(doc.data().direccion).substr(0, 10), doc.data().descripcion, String(doc.data().descripcion).substr(0, 10), doc.id)] })
+            this.setState({ data: [...this.state.data, createDataEnviosId(doc.data().idRastreo, doc.data().cliente, doc.data().telefono, doc.data().direccion, String(doc.data().direccion).substr(0, 10), doc.data().descripcion, String(doc.data().descripcion).substr(0, 10), doc.id)] })
             console.log(doc.data())
           } else {
             // doc.data() will be undefined in this case
@@ -131,70 +146,100 @@ class VerEnvio extends React.Component {
 
   handleActualizar = () => {
 
+    const { valor } = this.props.location.state
+    console.log(valor)
 
-    const newMoves = db.collection("move").doc();
-    const newManifest = db.collection("manifest").doc();
+
+
+    const newManifest = db.collection("manifest").doc(String(valor.idEnvio));
 
 
     let moves = []
     this.state.data.map(function (x) {
 
+      if (x.idEnvios != undefined) {
 
-      newMoves.set(x).then(function (docRef) {
+        db.collection("move").doc(String(x.idEnvios)).set(
+          createDataEnvios(x.idRastreo, x.cliente, x.telefono, x.direccion, x.direccionShort, x.descripcion, x.descripcionShort)
+          )
+          .then(function () {
+            moves.push(x.idEnvios)
 
-        moves.push(docRef.id)
+            newManifest.set(createDataManifest(valor.id, valor.fechaElaboracion, valor.estadoEnvio, moves)).then(function (docRef) {
 
-        newManifest.set(createDataManifest(this.state.codigoEnvio, this.state.fechaCreacion, this.state.estado, moves)).then(function (docRef) {
+            }.bind(this))
+              .catch(function (error) {
+                console.error("Error adding document: ", error);
+              })
+          }.bind(this))
+          .catch(function (error) {
+            console.error("Error writing document: ", error);
+          });
+
+
+      } else {
+        db.collection("move").add(
+          createDataEnvios(x.idRastreo, x.cliente, x.telefono, x.direccion, x.direccionShort, x.descripcion, x.descripcionShort)
+          ).then(function (docRef) {
+
+          moves.push(docRef.id)
+
+          newManifest.set(createDataManifest(valor.id, valor.fechaElaboracion, valor.estadoEnvio, moves)).then(function (docRef) {
+
+          }.bind(this))
+            .catch(function (error) {
+              console.error("Error adding document: ", error);
+            })
 
         }.bind(this))
           .catch(function (error) {
             console.error("Error adding document: ", error);
           })
 
-      }.bind(this))
-        .catch(function (error) {
-          console.error("Error adding document: ", error);
-        })
+      }
+
     }.bind(this))
 
-      
-      
-   
+  
+    
+
+
 
   }
 
   handleSaveDataJson = (value) => {
-    
+    console.log(value)
 
 
-    this.setState({ data: [...this.state.data, createDataJson(value.idRastreo, value.cliente, value.telefono,value.direccionShort,value.direccion, value.descripcionShort, value.descripcion)] });
+    this.setState({ data: [...this.state.data, createDataJson(value.idRastreo, value.cliente, value.telefono, value.direccionShort, value.direccion, value.descripcionShort, value.descripcion, value.idEnvios)] });
 
-    
-    
+
+
 
   };
 
-  handleUpdateDataJson=(value)=>{
+  handleUpdateDataJson = (value) => {
 
-    counter=0;  
+    counter = 0;
 
     console.log(value)
-    
+
     this.setState({
       data: this.state.data.map(function (t) {
-              if (t.idRastreo!= value.idRastreo) {
-                  return createDataJson(t.idRastreo, t.cliente, t.telefono,t.direccionShort,t.direccion, t.descripcionShort, t.descripcion)
-              } else {
+        if (t.idRastreo != value.idRastreo) {
+          return createDataJson(t.idRastreo, t.cliente, t.telefono, t.direccionShort, t.direccion, t.descripcionShort, t.descripcion, t.idEnvios)
+        } else {
 
-                  return createDataJson(t.idRastreo, value.cliente, value.telefono, value.direccionShort,value.direccion, value.descripcionShort,value.descripcion)
-              
-          }
+          return createDataJson(t.idRastreo, value.cliente, value.telefono, value.direccionShort, value.direccion, value.descripcionShort, value.descripcion, value.idEnvios)
 
-        })})
+        }
 
-    
-    
-    
+      })
+    })
+
+
+
+
   }
 
 
@@ -202,7 +247,7 @@ class VerEnvio extends React.Component {
 
 
 
- 
+
 
   handleSaveDataJsonDB = () => {
 
@@ -212,6 +257,8 @@ class VerEnvio extends React.Component {
 
     let moves = []
     this.state.data.map(function (x) {
+
+
 
 
       newMoves.add(x).then(function (docRef) {
